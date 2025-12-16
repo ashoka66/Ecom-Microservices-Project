@@ -25,10 +25,5 @@ public class AuthController {
 		return "User registered Successfully";
 	}
 	
-	@GetMapping("/login")
-	public String hello() {
-		
-		return "login successful - session created";
-	}
-
+	
 }
