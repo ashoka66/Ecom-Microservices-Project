@@ -22,6 +22,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 //	        return new ReactiveRedisTemplate<>(connectionFactory, serializationContext);
 //	    }
 //}
+
+
+
 //Marks this class as a Spring configuration class.
 //Spring will scan this class and execute all @Bean methods inside it.
 @Configuration
