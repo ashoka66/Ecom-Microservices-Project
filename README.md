@@ -19,10 +19,10 @@ The application is developed incrementally, and only stable, working features ar
    Handles authentication and authorization (Spring Security integration planned).
 
 4. **Product Service**  
-   Manages product information and inventory.
+   Manages product information and inventory. Added Role based Authentication.
 
 5. **Order Service**  
-   Handles order creation and publishes order events to Kafka.
+   Handles order creation and publishes order events to Kafka. Added Role based Authentication.
 
 6. **Payment Service**  
    Consumes order events from Kafka and processes payments.
