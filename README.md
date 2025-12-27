@@ -80,5 +80,19 @@ The application is developed incrementally, and only stable, working features ar
 
 ---
 
+
+# Project Features
+
+- All services register with the Eureka Server
+- Every request passes through the API Gateway
+- Services allow access based on authentication and authorization
+- Kafka is used for asynchronous communication
+- Redis is used for cache management
+- Spring Session–based authentication is implemented
+- Users can view products and create orders
+- Payment service issues payment success by default after order creation
+- More features will be added in future
+
+
 ## Author
 Ashok Gogulapati
