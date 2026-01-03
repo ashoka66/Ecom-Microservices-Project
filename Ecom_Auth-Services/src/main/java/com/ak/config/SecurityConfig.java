@@ -10,6 +10,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 @Configuration
 public class SecurityConfig {
 	
@@ -32,14 +34,36 @@ public class SecurityConfig {
         		                             .anyRequest().authenticated())
         
          //Disable default login form
-        .formLogin(form->form
-        		   .loginProcessingUrl("/auth/login")
-        		   .successHandler((req,res,auth)->res.setStatus(200))
-        		   .failureHandler((req,res,ex)->res.setStatus(401))
-        		   
-        		   )
-                   .logout(logout->logout.logoutUrl("/auth/logout"));
-        
+//        .formLogin(form->form
+//        		   .loginProcessingUrl("/auth/login")
+//        		   .successHandler((req,res,auth)->res.setStatus(200))
+//        		   .failureHandler((req,res,ex)->res.setStatus(401))
+//        		   
+//        		   )
+//                   .logout(logout->logout.logoutUrl("/auth/logout"));
+//       
+        .formLogin(form -> form
+                .loginProcessingUrl("/auth/login")
+               
+               
+                .successHandler((req, res, authn) -> {
+                    res.setStatus(HttpServletResponse.SC_OK);
+                })
+                .failureHandler((req, res, ex) -> {
+                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                })
+            )
+
+            // 🚨 THIS IS THE MISSING PIECE
+            .exceptionHandling(ex -> ex
+                .authenticationEntryPoint((req, res, ex2) -> {
+                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                })
+            )
+
+            .logout(logout -> logout
+                .logoutUrl("/auth/logout")
+            );
         
 	
 	 return http.build();
