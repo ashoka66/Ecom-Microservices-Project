@@ -13,6 +13,8 @@ public class EcomDiscoveryServerApplication {
 		SpringApplication.run(EcomDiscoveryServerApplication.class, args);
 	}
 
+	
+
 
 
 }
