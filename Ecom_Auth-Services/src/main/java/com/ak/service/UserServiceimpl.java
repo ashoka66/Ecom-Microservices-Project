@@ -26,7 +26,7 @@ public class UserServiceimpl implements IUserService {
 		user.setName(dto.getName());
 		user.setEmail(dto.getEmail());
 		user.setPassword(passwordEncoder.encode(dto.getPassword()));
-		user.setRole("USER");
+		user.setRole(dto.getRole());
 		
 		userRepo.save(user);
 	
