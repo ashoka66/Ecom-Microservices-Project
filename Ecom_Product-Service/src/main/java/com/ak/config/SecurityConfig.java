@@ -25,7 +25,7 @@ public class SecurityConfig {
 		http.csrf(csrf -> csrf.disable())
 		     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
 		     .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET,"/products/**")
-		    		                           .hasAnyRole("USER", "ADMIN")
+		    		                           .permitAll()
 		     	                           
 		    		                           
 		    		                           //Admin only
