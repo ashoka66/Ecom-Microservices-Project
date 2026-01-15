@@ -15,8 +15,8 @@ import org.springframework.web.server.WebFilterChain;
 
 import reactor.core.publisher.Mono;
 
-@Component
-@Order(1)
+//@Component
+//@Order(1)
 public class SessionValidationFilter implements WebFilter {
 
     @Autowired
