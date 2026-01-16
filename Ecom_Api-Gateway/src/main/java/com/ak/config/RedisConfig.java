@@ -27,7 +27,7 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 //Marks this class as a Spring configuration class.
 //Spring will scan this class and execute all @Bean methods inside it.
-//@Configuration
+@Configuration
 public class RedisConfig {
 
  // @Bean tells Spring:
