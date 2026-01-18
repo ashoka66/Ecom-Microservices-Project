@@ -15,6 +15,60 @@ import jakarta.servlet.http.HttpServletResponse;
 @Configuration
 public class SecurityConfig {
 	
+//	@Bean
+//	public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
+//		
+//		http.csrf(csrf->csrf.disable())
+//		
+//		 //Allow session based auth 
+//		
+//		 // Allow session-based auth
+//        .sessionManagement(session -> 
+//            session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+//        )
+//		
+//
+//		//url  security rules
+//        .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/register").permitAll()
+//        		                            .requestMatchers("/auth/login").permitAll()
+//        		                             .anyRequest().authenticated())
+//        
+//         //Disable default login form
+////        .formLogin(form->form
+////        		   .loginProcessingUrl("/auth/login")
+////        		   .successHandler((req,res,auth)->res.setStatus(200))
+////        		   .failureHandler((req,res,ex)->res.setStatus(401))
+////        		   
+////        		   )
+////                   .logout(logout->logout.logoutUrl("/auth/logout"));
+////       
+//        .formLogin(form -> form
+//                .loginProcessingUrl("/auth/login")
+//               
+//               
+//                .successHandler((req, res, authn) -> {
+//                    res.setStatus(HttpServletResponse.SC_OK);
+//                })
+//                .failureHandler((req, res, ex) -> {
+//                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                })
+//            )
+//
+//            // 🚨 THIS IS THE MISSING PIECE
+//            .exceptionHandling(ex -> ex
+//                .authenticationEntryPoint((req, res, ex2) -> {
+//                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+//                })
+//            )
+//
+//            .logout(logout -> logout
+//                .logoutUrl("/auth/logout")
+//            );
+//        
+//	
+//	 return http.build();
+//	 
+	
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http)throws Exception{
 		
@@ -26,48 +80,36 @@ public class SecurityConfig {
         .sessionManagement(session -> 
             session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         )
+        .authorizeHttpRequests(auth -> auth 
+        		                           .requestMatchers(
+                                             "/login",
+                                              "/auth/login",
+                                               "/auth/register",
+                                                "/css/**",
+                                                 "/js/**").permitAll()
+        		                                .anyRequest().authenticated()
+        		                           
+        		                                 )
+        
+          .formLogin(form -> form 
+        		    .loginPage("/login")
+        		    .loginProcessingUrl("/auth/login")
+        		    .defaultSuccessUrl("/products",true)
+        		    .failureUrl("/login?error")
+        		    .permitAll()
+        		    )
+          
+          //logout behaviour
+          .logout(logout->logout
+        		  .logoutUrl("/auth/logout")
+        		   .logoutSuccessUrl("/login")
+        		   );
 		
-
-		//url  security rules
-        .authorizeHttpRequests(auth -> auth.requestMatchers("/auth/register").permitAll()
-        		                            .requestMatchers("/auth/login").permitAll()
-        		                             .anyRequest().authenticated())
+		
+		return http.build();
+          
         
-         //Disable default login form
-//        .formLogin(form->form
-//        		   .loginProcessingUrl("/auth/login")
-//        		   .successHandler((req,res,auth)->res.setStatus(200))
-//        		   .failureHandler((req,res,ex)->res.setStatus(401))
-//        		   
-//        		   )
-//                   .logout(logout->logout.logoutUrl("/auth/logout"));
-//       
-        .formLogin(form -> form
-                .loginProcessingUrl("/auth/login")
-               
-               
-                .successHandler((req, res, authn) -> {
-                    res.setStatus(HttpServletResponse.SC_OK);
-                })
-                .failureHandler((req, res, ex) -> {
-                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                })
-            )
-
-            // 🚨 THIS IS THE MISSING PIECE
-            .exceptionHandling(ex -> ex
-                .authenticationEntryPoint((req, res, ex2) -> {
-                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                })
-            )
-
-            .logout(logout -> logout
-                .logoutUrl("/auth/logout")
-            );
         
-	
-	 return http.build();
-	 
 	}
 	@Bean
 	public AuthenticationManager authenticationManager(
