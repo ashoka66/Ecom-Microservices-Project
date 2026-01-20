@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+
+<html xmlns:th = "http://www.thymleaf.org">
+
+<head>
+ <link rel="stylesheet" href="@{/css/styles.css}">
+ <title>Products</title>
+
+</head>
+<body>
+ <h2>Products</h2>
+ 
+ <p>welcome, <span th:text="${authentication.name}"></span></p>
+ 
+  <ul>
+   <li th:each= "p : ${products}">
+   <span th:text = "${p.name}" > </span>
+   -
+   <span th:text ="${p.price}"></span>
+   
+  </ul>
+  
+  <a href="/orders">View Orders</a>
+  <a href="/auth/logout">Logout</a>
+
+</body>
+</html>
