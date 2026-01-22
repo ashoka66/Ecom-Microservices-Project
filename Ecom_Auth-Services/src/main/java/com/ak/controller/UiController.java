@@ -28,7 +28,7 @@ public class UiController {
 		  
 	  }
 	  
-	  
+	  @GetMapping
 	  public String OrdersPage(Model model) {
 		  List<?> orders=restTemplate.getForObject("http://localhost:8086/orders", List.class);
 		  model.addAttribute("orders",orders);
