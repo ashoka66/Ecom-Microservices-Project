@@ -19,7 +19,7 @@ public class UiController {
 	    return "login";
 	  }
 	  
-	  @GetMapping
+	  @GetMapping("/products")
 	  public String productsPage(Model model) {
 		   
 		  List<?> products= restTemplate.getForObject("http://localhost:8086/products", List.class);
@@ -28,7 +28,7 @@ public class UiController {
 		  
 	  }
 	  
-	  @GetMapping
+	  @GetMapping("/orders")
 	  public String OrdersPage(Model model) {
 		  List<?> orders=restTemplate.getForObject("http://localhost:8086/orders", List.class);
 		  model.addAttribute("orders",orders);
