@@ -83,6 +83,9 @@ public class SecurityConfig {
         .sessionManagement(session -> 
             session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
         )
+        .securityContext(context ->
+        context.requireExplicitSave(false)   
+    )
         .authorizeHttpRequests(auth -> auth 
         		                           .requestMatchers(
                                              "/login",

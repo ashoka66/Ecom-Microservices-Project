@@ -10,30 +10,32 @@ import org.springframework.web.client.RestTemplate;
 
 @Controller
 public class UiController {
-	
-	 @Autowired
-	  private RestTemplate restTemplate;
 
-	  @GetMapping("/login")
-	  public String loginPage() {
-	    return "login";
-	  }
-	  
-	  @GetMapping("/products")
-	  public String productsPage(Model model) {
-		   
-		  List<?> products= restTemplate.getForObject("http://localhost:8086/products", List.class);
-		  model.addAttribute("products",products);
-		  return "products";
-		  
-	  }
-	  
-	  @GetMapping("/orders")
-	  public String OrdersPage(Model model) {
-		  List<?> orders=restTemplate.getForObject("http://localhost:8086/orders", List.class);
-		  model.addAttribute("orders",orders);
-		  return "orders";
-	  }
+    @Autowired
+    private RestTemplate restTemplate;
 
+    @GetMapping("/login")
+    public String loginPage() {
+        return "login";
+    }
 
+    @GetMapping("/products")
+    public String productsPage(Model model) {
+
+        List<?> products =
+            restTemplate.getForObject("http://localhost:8086/products", List.class);
+
+        model.addAttribute("products", products);
+        return "products";
+    }
+
+    @GetMapping("/orders")
+    public String ordersPage(Model model) {
+
+        List<?> orders =
+            restTemplate.getForObject("http://localhost:8086/orders", List.class);
+
+        model.addAttribute("orders", orders);
+        return "orders";
+    }
 }
