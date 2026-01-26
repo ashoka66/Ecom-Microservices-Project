@@ -24,7 +24,7 @@ public class AppConfig {
             if (attrs != null) {
                 HttpServletRequest currentRequest = attrs.getRequest();
                 String cookieHeader = currentRequest.getHeader("Cookie");
-                System.out.println("🔍 Incoming Cookie header: " + cookieHeader);
+//                System.out.println("🔍 Incoming Cookie header: " + cookieHeader);
 
                 if (cookieHeader != null) {
                     request.getHeaders().add("Cookie", cookieHeader);
