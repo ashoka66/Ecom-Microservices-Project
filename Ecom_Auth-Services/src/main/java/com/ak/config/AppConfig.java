@@ -18,19 +18,8 @@ public class AppConfig {
 
         restTemplate.getInterceptors().add((request, body, execution) -> {
 
-            ServletRequestAttributes attrs =
-                (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-
-            if (attrs != null) {
-                HttpServletRequest currentRequest = attrs.getRequest();
-                String cookieHeader = currentRequest.getHeader("Cookie");
-
-
-                if (cookieHeader != null) {
-                    request.getHeaders().add("Cookie", cookieHeader);
-                }
-            }
-
+        	 // Add internal service header
+            request.getHeaders().add("X-Internal-Call", "AUTH_SERVICE");
             return execution.execute(request, body);
         });
 
