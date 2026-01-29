@@ -39,8 +39,8 @@ public class SessionValidationFilter implements WebFilter {
             HttpCookie sessionCookie = exchange.getRequest().getCookies().getFirst("JSESSIONID");
             
             String internalToken = exchange.getRequest().getHeaders().getFirst("X-Internal-Call");
-            if("AUTH-SERVICE".equals(internalToken)) {
-            	System.out.println("Internal call from auth-service, bypass session check " );
+            if("AUTH_SERVICE".equals(internalToken)) {
+//            	System.out.println("Internal call from auth-service, bypass session check " );
             	return chain.filter(exchange);
             }
             if (sessionCookie == null) {
