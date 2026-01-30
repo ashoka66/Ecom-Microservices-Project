@@ -21,13 +21,15 @@ public class KafkaConsumerConfig {
 
     @Bean
     public ConsumerFactory<String, OrderEvent> consumerFactory() {
-
+         
+    	
+    	
         Map<String, Object> config = new HashMap<>();
         config.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
         config.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         config.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
 
-        // Proper Spring Kafka 4.0 configuration
+        
         config.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         config.put(JsonDeserializer.USE_TYPE_INFO_HEADERS, false);
         config.put(JsonDeserializer.VALUE_DEFAULT_TYPE, "com.ak.dto.OrderEvent");

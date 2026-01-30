@@ -25,7 +25,7 @@ public class PaymentConsumer {
 
         log.info("Received Order Event -> {}", event);
 
-        // Fake payment processing
+        // simulate payment processing
         log.info("Processing payment for orderId = {}", event.getId());
 
         try { Thread.sleep(2000); } catch (Exception ignored) {}
