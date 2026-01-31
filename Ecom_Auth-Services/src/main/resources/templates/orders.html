@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-  <title>Orders</title>
+    <title>Orders</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
-<h2>Your Orders Page</h2>
+    <h2>Your Orders Page</h2>
 
-<ul>
+    <ul>
+        <li th:each="o : ${orders}">
+            Product ID: <span th:text="${o.productId}">0</span>,
+            Quantity: <span th:text="${o.quantity}">0</span>,
+            Status: <span th:text="${o.status}">Pending</span>
+        </li>
+    </ul>
 
-<li th:each="o : ${ordres}">
-  Product ID : <span th:text="${o.productId}"></span>
-  Quantity : <span th:text="${o.quantity}"></span>
-  Status : <span th:text ="${o.status}"></span>
-  </li>
-</ul>
-
-
-<a href="/products">Back to Products</a>
+    <br>
+    <a href="/products">Back to Products</a>
  
 </body>
-
 </html>

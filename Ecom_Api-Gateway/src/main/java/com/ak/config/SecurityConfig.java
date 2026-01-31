@@ -17,8 +17,8 @@ public class SecurityConfig {
 		 http.csrf(ServerHttpSecurity.CsrfSpec::disable)
 		     .authorizeExchange(ex->ex
 		    		             .pathMatchers("/auth/**").permitAll()
-		    		             .pathMatchers("/products/**").authenticated()
-		    		             .pathMatchers("/orders/**").authenticated()
+		    		             .pathMatchers("/products/**").permitAll()
+		    		             .pathMatchers("/orders/**").permitAll()
 		    		             .anyExchange().authenticated()
 		    		             );
 		     

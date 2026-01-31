@@ -1,27 +1,26 @@
 <!DOCTYPE html>
-
-<html xmlns:th = "http://www.thymleaf.org">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
- <link rel="stylesheet" href="@{/css/styles.css}">
- <title>Products</title>
-
+    <title>Products</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
- <h2>Products Page </h2>
- 
- <p>welcome, <span th:text="${authentication.name}"></span></p>
- 
-  <ul>
-   <li th:each= "p : ${products}">
-   <span th:text = "${p.name}" > </span>
-   -
-   <span th:text ="${p.price}"></span>
-   
-  </ul>
-  
-  <a href="/orders">View Orders</a>
-  <a href="/auth/logout">Logout</a>
+    <h2>Products Page</h2>
+    
+    <p>Welcome, <span th:text="${#authentication.name}">User</span></p>
+    
+    <ul>
+        <li th:each="p : ${products}">
+            <span th:text="${p.name}">Product Name</span>
+            -
+            $<span th:text="${p.price}">0.00</span>
+        </li>
+    </ul>
+    
+    <br>
+    <a href="/orders">View Orders</a>
+    <br>
+    <a href="/auth/logout">Logout</a>
 
 </body>
 </html>
