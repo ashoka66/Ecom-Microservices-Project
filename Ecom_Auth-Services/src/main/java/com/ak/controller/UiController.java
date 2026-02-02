@@ -34,7 +34,7 @@ public class UiController {
     public String productsPage(Model model, Principal principal) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Internal-Call", "AUTH_SERVICE");
+        headers.set("X-Internal-Calls", "AUTH_SERVICE");
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         try {
@@ -69,7 +69,7 @@ public class UiController {
     public String ordersPage(Model model, Principal principal) {
 
         HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Internal-Call", "AUTH_SERVICE");
+        headers.set("X-Internal-Calls", "AUTH_SERVICE");
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
         try {

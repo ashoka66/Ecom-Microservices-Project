@@ -19,7 +19,7 @@ public class AppConfig {
         restTemplate.getInterceptors().add((request, body, execution) -> {
 
         	 // Add internal service header
-            request.getHeaders().add("X-Internal-Call", "AUTH_SERVICE");
+            request.getHeaders().add("X-Internal-Calls", "AUTH_SERVICE");
          //  ADDED DEBUG LOGGING
             System.out.println("🚀 RestTemplate Request:");
             System.out.println("   URL: " + request.getURI());
