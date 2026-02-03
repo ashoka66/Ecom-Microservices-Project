@@ -45,7 +45,7 @@ public class UiController {
                 String.class
             );
 
-            System.out.println("📦 Raw response: " + rawResponse.getBody());
+            System.out.println(" Raw response: " + rawResponse.getBody());
 
             ObjectMapper mapper = new ObjectMapper();
             List<Map<String, Object>> products = mapper.readValue(
@@ -53,15 +53,15 @@ public class UiController {
                 new TypeReference<List<Map<String, Object>>>() {}
             );
 
-            System.out.println("📦 Parsed size: " + products.size());
-            model.addAttribute("products", products);  // ✅ lowercase p
+            System.out.println(" Parsed size: " + products.size());
+            model.addAttribute("products", products); 
 
         } catch (Exception e) {
-            System.out.println("❌ Error: " + e.getMessage());
+            System.out.println(" Error: " + e.getMessage());
             model.addAttribute("products", new ArrayList<>());
         }
 
-        model.addAttribute("username", principal.getName());  // ✅ comma not +
+        model.addAttribute("username", principal.getName());  
         return "products";
     }
 
@@ -81,7 +81,7 @@ public class UiController {
             );
             model.addAttribute("orders", response.getBody());
         } catch (Exception e) {
-            System.out.println("⚠️ Order service not available: " + e.getMessage());
+            System.out.println(" Order service not available: " + e.getMessage());
             model.addAttribute("orders", new ArrayList<>());
         }
 
