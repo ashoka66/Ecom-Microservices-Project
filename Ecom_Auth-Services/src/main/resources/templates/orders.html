@@ -2,22 +2,27 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Orders</title>
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 
     <h2>Your Orders Page</h2>
+    
+    <p>Welcome, <span th:text="${username}">User</span></p>
 
-    <ul>
+    <p th:if="${orders == null or orders.isEmpty()}">
+        No orders available yet. (Order service is not running)
+    </p>
+
+    <ul th:if="${orders != null and !orders.isEmpty()}">
         <li th:each="o : ${orders}">
-            Product ID: <span th:text="${o.productId}">0</span>,
-            Quantity: <span th:text="${o.quantity}">0</span>,
-            Status: <span th:text="${o.status}">Pending</span>
+            Product ID: <span th:text="${o['productId']}">0</span>,
+            Quantity: <span th:text="${o['quantity']}">0</span>,
+            Status: <span th:text="${o['status']}">Pending</span>
         </li>
     </ul>
 
     <br>
     <a href="/products">Back to Products</a>
- 
+
 </body>
 </html>

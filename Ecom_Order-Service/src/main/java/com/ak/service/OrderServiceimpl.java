@@ -1,5 +1,7 @@
 package com.ak.service;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
 import com.ak.dto.OrderRequestDto;
@@ -50,6 +52,13 @@ public class OrderServiceimpl implements IOrderService {
 		orderProducer.sendOrderEvent(saveOrder);
 		
 		return saveOrder;
+	}
+
+
+	@Override
+	public List<Order> getAllOrders() {
+		
+		return orderRepository.findAll();
 	}
 
 }

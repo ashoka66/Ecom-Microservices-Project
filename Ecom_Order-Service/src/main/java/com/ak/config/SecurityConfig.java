@@ -20,7 +20,7 @@ public class SecurityConfig {
 			    .requestMatchers(HttpMethod.POST, "/orders/**")
 			    .hasRole("USER")
 			    .requestMatchers(HttpMethod.GET, "/orders/**")
-			    .hasAnyRole("USER", "ADMIN")
+			    .permitAll()
 			    .anyRequest().authenticated()
 			);
 		    		                             
