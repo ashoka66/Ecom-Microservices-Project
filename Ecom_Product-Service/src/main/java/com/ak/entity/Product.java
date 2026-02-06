@@ -33,6 +33,7 @@ public class Product implements java.io.Serializable {
 		
 		private String category;
 
-	
+		  // Image URL for product display
+	    private String imageUrl;
 
 }
