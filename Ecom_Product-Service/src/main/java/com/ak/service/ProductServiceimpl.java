@@ -31,6 +31,7 @@ public class ProductServiceimpl implements IProductService {
 		p.setPrice(dto.getPrice());
 		p.setStock(dto.getStock());
 		p.setCategory(dto.getCategory());
+		p.setImageUrl(dto.getImageUrl());
 		return prodRepo.save(p);
 	}
 
@@ -58,6 +59,7 @@ public class ProductServiceimpl implements IProductService {
 		p.setPrice(dto.getPrice());
 		p.setStock(dto.getStock());
 		p.setCategory(dto.getCategory());
+		p.setImageUrl(dto.getImageUrl());
 		
 		return prodRepo.save(p);
 	}

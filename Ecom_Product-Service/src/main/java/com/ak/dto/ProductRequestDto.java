@@ -15,6 +15,8 @@ private String name;
 	
 	private String category;
 	
+	private String imageUrl;
+	
 	
 	// Getter and Setter for name
     public String getName() {
@@ -60,6 +62,17 @@ private String name;
     public void setCategory(String category) {
         this.category = category;
     }
+    
+    public void setImageUrl(String imageUrl) {
+    	
+    	this.imageUrl=imageUrl;
+    }
+    
+    public String getImageUrl() {
+    	return imageUrl;
+    	
+    	
+   	}
 
     // toString method
     @Override
@@ -69,7 +82,9 @@ private String name;
                 ", description='" + description + '\'' +
                 ", price=" + price +
                 ", stock=" + stock +
-                ", category='" + category + '\'' +
+                ", category='" + category + '\'' + 
+                ", imageUrl='" + imageUrl + '\'' + 
+                
                 '}';
     }
 
