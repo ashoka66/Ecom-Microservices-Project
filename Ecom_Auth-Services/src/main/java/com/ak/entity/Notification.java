@@ -25,7 +25,7 @@ public class Notification {
 	
 	private String message;
 	
-	private String type;  //ORDER_PLACED, ORDER_COMPLETED, SYSTEM, etc.
+	private String type;   //ORDER_PLACED, ORDER_COMPLETED, SYSTEM, etc.
 	
 	private Boolean isRead = false ;
 	
