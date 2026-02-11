@@ -54,7 +54,7 @@ public class SecurityConfig {
 //                })
 //            )
 //
-//            // 🚨 THIS IS THE MISSING PIECE
+//            // THIS IS THE MISSING PIECE
 //            .exceptionHandling(ex -> ex
 //                .authenticationEntryPoint((req, res, ex2) -> {
 //                    res.setStatus(HttpServletResponse.SC_UNAUTHORIZED);

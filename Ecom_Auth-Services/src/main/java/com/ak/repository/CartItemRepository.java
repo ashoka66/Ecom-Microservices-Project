@@ -9,7 +9,7 @@ import com.ak.entity.CartItem;
 public interface CartItemRepository extends JpaRepository<CartItem, Long> {
 	
 	
-	Optional<CartItem> findByIdAndProductId(Long cartId, Long productId);
+	Optional<CartItem> findByCartIdAndProductId(Long cartId, Long productId);
 	
 
 }
