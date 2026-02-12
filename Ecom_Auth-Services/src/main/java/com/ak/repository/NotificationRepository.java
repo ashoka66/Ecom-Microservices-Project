@@ -10,7 +10,7 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 	
 	//get all notification fir a specific user
 	//Ordered by creation date (newest first)
-	List<Notification> findByUserIdOrderByrCreatedAtDesc(Long userId);
+	List<Notification> findByUserIdOrderByCreatedAtDesc(Long userId);
 	
 	
 	//get unread notification count for a user

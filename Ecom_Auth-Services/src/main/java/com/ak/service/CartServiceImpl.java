@@ -9,6 +9,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
 
 import com.ak.entity.Cart;
@@ -54,6 +55,7 @@ public class CartServiceImpl implements ICartService {
 	}
 
 	@Override
+	@Transactional
 	public Cart addUser(Long userId, Long productId, Integer quantity) {
 		
 		Cart cart = getCartByUserId(userId);
@@ -108,6 +110,7 @@ public class CartServiceImpl implements ICartService {
 	//update cart item of existing cart item 
 
 	@Override
+	@Transactional
 	public Cart updateCartItemQuantity(Long userId, Long cartItemId, Integer quantity) {
 		
 		Cart cart =getCartByUserId(userId);
@@ -130,20 +133,46 @@ public class CartServiceImpl implements ICartService {
 			item.setQuantity(quantity);
 			cartItemRepository.save(item);
 		}
+		
+		return cartRepository.findById(cart.getId()).orElse(cart);
+	}
+	
+    
+	
+	// Removing items from cart 
+	@Override
+	@Transactional
+	public Cart removeFromCart(Long userId, Long cartItemId) {
+		
+		Cart cart= getCartByUserId(userId);  //this is optional object where we are handling null pointer Exception
+		
+		CartItem item=cartItemRepository.findById(cartItemId)
+				       .orElseThrow(() -> new RuntimeException("Cart item not found"));
+		
+	  //verify cart item belongs to user'cart
+		if(!item.getCart().getId().equals(cart.getId())) {
 			
+			throw new RuntimeException("unauthorized cart item access");
 			
+		}
+		
+		cartItemRepository.delete(item);
+		
+		
 		
 		return cartRepository.findById(cart.getId()).orElse(cart);
 	}
 
 	@Override
-	public Cart removeFromCart(Long userId, Long cartItemId) {
-		
-		return null;
-	}
-
-	@Override
+	@Transactional
 	public void clearCart(Long userId) {
+		
+		Cart cart=getCartByUserId(userId);
+		
+		cart.getItems().clear();
+		
+		cartRepository.save(cart);
+		
 		
 	}
 
