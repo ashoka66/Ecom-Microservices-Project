@@ -77,7 +77,7 @@ public class SecurityConfig {
 		
 		http.csrf(csrf->csrf.disable())
 		
-		 //Allow session based auth 
+		 
 		
 		 // Allow session-based auth
         .sessionManagement(session -> 
@@ -86,21 +86,40 @@ public class SecurityConfig {
         .securityContext(context ->
         context.requireExplicitSave(false)   
     )
-        .authorizeHttpRequests(auth -> auth 
+        .authorizeHttpRequests(  auth -> auth 
         		                           .requestMatchers(
                                              "/login",
                                               "/auth/login",
                                                "/auth/register",
                                                 "/css/**",
-                                                 "/js/**").permitAll()
-        		                                .anyRequest().authenticated()
+                                                 "/js/**",
+                                                 "/images/**").permitAll()
         		                           
-        		                                 )
+        		                                   //Admin-only End point
+        		                                .requestMatchers("/admin/**").hasRole("ADMIN")
+        		                           
+        		              //USER end points and both(USER and ADMIN)           
+        		                  .requestMatchers(
+        		                		  
+        		                		  "/products",
+        		                		  "/orders",
+        		                		  "/cart",
+        		                		  "/profile/**"
+        		                		  
+        		                		  ).hasAnyRole("ADMIN","USER")
+        		                  
+        		                  //ALL other request required authentication
+        		                  .anyRequest().authenticated()
+        
+                         )
+        
+        
+        
         
           .formLogin(form -> form 
         		    .loginPage("/login")
         		    .loginProcessingUrl("/auth/login")
-        		    .defaultSuccessUrl("/products",true)
+        		    .defaultSuccessUrl("/",true)  //Redirect to home (which routes by role)
         		    .failureUrl("/login?error")
         		    .permitAll()
         		    )

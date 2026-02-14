@@ -2,7 +2,11 @@ package com.ak.service;
 
 import java.util.List;
 
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import com.ak.dto.OrderRequestDto;
 import com.ak.dto.ProductResponse;
@@ -12,6 +16,13 @@ import com.ak.kafka.OrderProducer;
 import com.ak.repository.OrderRepository;
 
 import lombok.RequiredArgsConstructor;
+
+
+
+/**
+ * Order Service Implementation Handles order placement and business logic
+ * Integrates with Product Service (Feign) and Kafka for events
+ */
 
 @Service
 @RequiredArgsConstructor
@@ -29,7 +40,7 @@ public class OrderServiceimpl implements IOrderService {
 		//1 .fetch product details
 		ProductResponse product= productClient.getProduct(dto.getProductId());
 		
-		if(product == null || product.getStock() <= dto.getQuantity()) {
+		if(product == null || product.getStock() < dto.getQuantity()) {
 			
 			throw new RuntimeException("product stock not sufficient");
 		}
@@ -46,12 +57,18 @@ public class OrderServiceimpl implements IOrderService {
 		order.setTotalPrice(totalPrice);
 		order.setStatus("CREATED");
 		
-		Order saveOrder = orderRepository.save(order);
+		Order savedOrder = orderRepository.save(order);
 		
 		//4. publish kafka event
-		orderProducer.sendOrderEvent(saveOrder);
+				orderProducer.sendOrderEvent(savedOrder);
 		
-		return saveOrder;
+		
+		sendNotificatioToUser(dto.getUserId(),
+				"order #" +savedOrder.getId() + "placed sucessfully Total " + totalPrice);
+		
+		
+		
+		return savedOrder;
 	}
 
 
@@ -60,5 +77,37 @@ public class OrderServiceimpl implements IOrderService {
 		
 		return orderRepository.findAll();
 	}
+	
+	
+	
+	private void sendNotificatioToUser(Long userId, String message) {
+		
+		try {
+			
+			RestTemplate restTemplate= new RestTemplate();
+			
+			String notificationJson = String.format("{\"userId\":%d,\"message\":\"%s\",\"type\":\"ORDER_PLACED\"}", userId,message);
+			
+			HttpHeaders headers = new HttpHeaders();
+			headers.set("X-Internal-Calls", "AUTH-SERVICE");
+			headers.setContentType(MediaType.APPLICATION_JSON);
+			
+			HttpEntity<String> entity=new HttpEntity<>(notificationJson,headers);
+			
+			restTemplate.postForObject("http://localhost:8081/api/notifications", entity, String.class);
+			
+			System.out.println("Notification send to user " + userId);
+			
+ 		}
+		catch(Exception e) {
+			
+			System.out.println("Failed to send Notifications"+e.getMessage());
+			//don't fail the notification if notification fails 
+		}
+		
+	}
+	
+	
+	
 
 }
