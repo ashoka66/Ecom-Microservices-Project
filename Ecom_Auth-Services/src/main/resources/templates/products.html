@@ -1,26 +1,125 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Products</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - E-Commerce</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <h2>Products Page</h2>
-
-    <p>Welcome, <span th:text="${username}">User</span></p>
-
-    <p th:text="${products}">debug</p>
-
-    <ul>
-        <li th:each="p : ${products}">
-            <span th:text="${p['name']}">Name</span>
-            -
-            <span th:text="${p['price']}">Price</span>
-        </li>
-    </ul>
-
-    <br>
-    <a href="/orders">View Orders</a>
-    <br>
-    <a href="/auth/logout">Logout</a>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/products" class="navbar-brand">ShopMart</a>
+            
+            <ul class="navbar-menu">
+                <li><a href="/products">Products</a></li>
+                <li>
+                    <a href="/cart">
+                         Cart
+                        <span class="navbar-badge" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
+                    </a>
+                </li>
+                <li><a href="/orders">My Orders</a></li>
+                <li>
+                    <a href="/profile">
+                         Notifications
+                        <span class="navbar-badge" th:if="${unreadNotifications > 0}" th:text="${unreadNotifications}">0</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="navbar-user">
+                        <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
+                        <span th:text="${username}">User</span>
+                    </div>
+                </li>
+                <li>
+                    <form th:action="@{/auth/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-sm btn-outline">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+    
+    
+    <div class="container">
+    
+     <div class="page-header">
+            <h1 class="page-title">Discover Amazing Products</h1>
+            <p class="page-subtitle">Shop from our curated collection</p>
+        </div>
+        
+          <!-- Empty State -->
+        <div th:if="${products == null or products.isEmpty()}" class="empty-state">
+            <div class="empty-state-icon"></div>
+            <h2 class="empty-state-title">No Products Available</h2>
+            <p class="empty-state-text">Check back soon for new arrivals!</p>
+        </div>
+        
+        
+        
+        <!-- Products Grid -->
+        <div class="products-grid" th:if="${products != null and !products.isEmpty()}">
+        
+                 <div class="card product-card" th:each="product : ${products}">
+                 
+                 <!-- Product Badge -->
+                <span class="product-badge" th:if="${product['stock'] < 10}">Low Stock</span>
+                
+                <!-- Product Image -->
+                <img 
+                    th:src="${product['imageUrl'] != null ? product['imageUrl'] : 'https://via.placeholder.com/300x200?text=No+Image'}" 
+                    alt="Product Image"
+                    class="card-img"
+                />
+                
+                
+                        <!-- Product Details -->
+                       <div class="card-body">
+                       
+                       <h3 class="card-title" th:text="${product['name']}">Product Name</h3>
+                      <p class="card-text" th:text="${product['description']}">Product description</p>
+                      
+                      <div class="product-stock">
+                        <span th:classappend="${product['stock'] > 10 ? 'stock-available' : 'stock-low'}">
+                            <strong>Stock:</strong> 
+                            <span th:text="${product['stock']}">0</span> units
+                        </span>
+                    </div>
+                       
+                       <div class="card-price">
+                        ₹<span th:text="${product['price']}">0.00</span>
+                    </div>
+                       
+                        </div> <!-- Product Details -->
+                        
+                        
+                        
+                        <!-- Add to Cart Button -->
+                <div class="card-footer">
+                    <form th:action="@{/cart/add}" method="post" style="margin: 0;">
+                        <input type="hidden" name="productId" th:value="${product['id']}" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary btn-block"
+                            th:disabled="${product['stock'] <= 0}"
+                        >
+                            <span th:if="${product['stock'] > 0}">🛒 Add to Cart</span>
+                            <span th:if="${product['stock'] <= 0}">Out of Stock</span>
+                        </button>
+                    </form>
+                </div> <!-- Add to Cart Button -->
+        
+        
+                 </div>  <!-- Products Grid -->
+        
+         </div>    <!-- page-header -->
+        
+     </div> <!-- container -->
+    
+    
+    
 </body>
 </html>

@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Product - Admin</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/admin" class="navbar-brand">🛒 ShopMart Admin</a>
+            
+            <ul class="navbar-menu">
+                <li><a href="/admin">Dashboard</a></li>
+                <li><a href="/admin/products/add" style="color: var(--primary-color);">Add Product</a></li>
+                <li><a href="/products">View Store</a></li>
+                <li>
+                    <div class="navbar-user">
+                        <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">A</div>
+                        <span th:text="${username}">Admin</span>
+                    </div>
+                </li>
+                <li>
+                    <form th:action="@{/auth/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-sm btn-outline">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Add New Product</h1>
+            <p class="page-subtitle">Fill in the product details below</p>
+        </div>
+
+        <!-- Error Message -->
+        <div th:if="${param.error == 'failed'}" class="alert alert-error">
+            ❌ Failed to add product. Please try again.
+        </div>
+
+        <!-- Add Product Form -->
+        <div class="form-container" style="max-width: 600px;">
+            <form th:action="@{/admin/products/add}" method="post">
+                
+                <!-- Product Name -->
+                <div class="form-group">
+                    <label class="form-label" for="name">Product Name *</label>
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        id="name" 
+                        name="name" 
+                        placeholder="Enter product name"
+                        required 
+                    />
+                </div>
+
+                <!-- Description -->
+                <div class="form-group">
+                    <label class="form-label" for="description">Description *</label>
+                    <textarea 
+                        class="form-control" 
+                        id="description" 
+                        name="description" 
+                        rows="4"
+                        placeholder="Enter product description"
+                        required
+                        style="resize: vertical;"
+                    ></textarea>
+                </div>
+
+                <!-- Price -->
+                <div class="form-group">
+                    <label class="form-label" for="price">Price (₹) *</label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        id="price" 
+                        name="price" 
+                        step="0.01"
+                        min="0"
+                        placeholder="0.00"
+                        required 
+                    />
+                </div>
+
+                <!-- Stock -->
+                <div class="form-group">
+                    <label class="form-label" for="stock">Stock Quantity *</label>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        id="stock" 
+                        name="stock" 
+                        min="0"
+                        placeholder="0"
+                        required 
+                    />
+                </div>
+
+                <!-- Category -->
+                <div class="form-group">
+                    <label class="form-label" for="category">Category *</label>
+                    <select class="form-control" id="category" name="category" required>
+                        <option value="">Select a category</option>
+                        <option value="Electronics">Electronics</option>
+                        <option value="Clothing">Clothing</option>
+                        <option value="Books">Books</option>
+                        <option value="Home & Kitchen">Home & Kitchen</option>
+                        <option value="Sports">Sports</option>
+                        <option value="Toys">Toys</option>
+                        <option value="Beauty">Beauty</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <!-- Image URL -->
+                <div class="form-group">
+                    <label class="form-label" for="imageUrl">Image URL *</label>
+                    <input 
+                        type="url" 
+                        class="form-control" 
+                        id="imageUrl" 
+                        name="imageUrl" 
+                        placeholder="https://example.com/image.jpg"
+                        required 
+                    />
+                    <small style="color: var(--gray); font-size: 0.875rem;">
+                        💡 Tip: Use image hosting services like Imgur, Cloudinary, or direct product image URLs
+                    </small>
+                </div>
+
+                <!-- Preview Card -->
+                <div class="form-group">
+                    <label class="form-label">Preview</label>
+                    <div class="card" style="max-width: 300px; margin: 0 auto;">
+                        <img 
+                            id="preview-image" 
+                            src="https://via.placeholder.com/300x200?text=Product+Preview" 
+                            alt="Product Preview"
+                            class="card-img"
+                        />
+                        <div class="card-body">
+                            <h3 class="card-title" id="preview-name">Product Name</h3>
+                            <p class="card-text" id="preview-description">Product description will appear here</p>
+                            <div class="card-price">₹<span id="preview-price">0.00</span></div>
+                            <div class="product-stock">
+                                <strong>Stock:</strong> <span id="preview-stock">0</span> units
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Buttons -->
+                <div style="display: flex; gap: var(--spacing-sm);">
+                    <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
+                        ✅ Add Product
+                    </button>
+                    <a href="/admin" class="btn btn-outline btn-lg" style="flex: 1;">
+                        Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Live Preview Script -->
+    <script>
+        // Live preview updates as user types
+        document.getElementById('name').addEventListener('input', function(e) {
+            document.getElementById('preview-name').textContent = e.target.value || 'Product Name';
+        });
+
+        document.getElementById('description').addEventListener('input', function(e) {
+            document.getElementById('preview-description').textContent = e.target.value || 'Product description will appear here';
+        });
+
+        document.getElementById('price').addEventListener('input', function(e) {
+            document.getElementById('preview-price').textContent = e.target.value || '0.00';
+        });
+
+        document.getElementById('stock').addEventListener('input', function(e) {
+            document.getElementById('preview-stock').textContent = e.target.value || '0';
+        });
+
+        document.getElementById('imageUrl').addEventListener('input', function(e) {
+            const img = document.getElementById('preview-image');
+            if (e.target.value) {
+                img.src = e.target.value;
+                img.onerror = function() {
+                    this.src = 'https://via.placeholder.com/300x200?text=Invalid+Image+URL';
+                };
+            } else {
+                img.src = 'https://via.placeholder.com/300x200?text=Product+Preview';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart - E-Commerce</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/products" class="navbar-brand">🛒 ShopMart</a>
+            
+            <ul class="navbar-menu">
+                <li><a href="/products">Products</a></li>
+                <li><a href="/cart" style="color: var(--primary-color);">🛒 Cart</a></li>
+                <li><a href="/orders">My Orders</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li>
+                    <div class="navbar-user">
+                        <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
+                        <span th:text="${username}">User</span>
+                    </div>
+                </li>
+                <li>
+                    <form th:action="@{/auth/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-sm btn-outline">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Shopping Cart</h1>
+            <p class="page-subtitle">Review your items before checkout</p>
+        </div>
+
+        <!-- Empty Cart -->
+        <div th:if="${cart.items == null or cart.items.isEmpty()}" class="empty-state">
+            <div class="empty-state-icon">🛒</div>
+            <h2 class="empty-state-title">Your cart is empty</h2>
+            <p class="empty-state-text">Add some products to get started!</p>
+            <a href="/products" class="btn btn-primary btn-lg">Continue Shopping</a>
+        </div>
+
+        <!-- Cart with Items -->
+        <div class="cart-container" th:if="${cart.items != null and !cart.items.isEmpty()}">
+            <!-- Cart Items Section -->
+            <div class="cart-items">
+                <h2 style="margin-bottom: var(--spacing-lg);">Cart Items</h2>
+                
+                <div class="cart-item" th:each="item : ${cart.items}">
+                    <!-- Product Image -->
+                    <img 
+                        th:src="${item.productImageUrl != null ? item.productImageUrl : 'https://via.placeholder.com/100?text=No+Image'}" 
+                        alt="Product"
+                        class="cart-item-img"
+                    />
+                    
+                    <!-- Product Details -->
+                    <div class="cart-item-details">
+                        <h3 class="cart-item-name" th:text="${item.productName}">Product Name</h3>
+                        <p class="cart-item-price">₹<span th:text="${item.productPrice}">0.00</span> per unit</p>
+                        
+                        <!-- Quantity Controls -->
+                        <div class="cart-item-quantity">
+                            <form th:action="@{/cart/update}" method="post" style="display: inline;">
+                                <input type="hidden" name="cartItemId" th:value="${item.id}" />
+                                <input type="hidden" name="quantity" th:value="${item.quantity - 1}" />
+                                <button type="submit" class="quantity-btn" th:disabled="${item.quantity <= 1}">-</button>
+                            </form>
+                            
+                            <input 
+                                type="number" 
+                                class="quantity-input" 
+                                th:value="${item.quantity}" 
+                                readonly
+                            />
+                            
+                            <form th:action="@{/cart/update}" method="post" style="display: inline;">
+                                <input type="hidden" name="cartItemId" th:value="${item.id}" />
+                                <input type="hidden" name="quantity" th:value="${item.quantity + 1}" />
+                                <button type="submit" class="quantity-btn">+</button>
+                            </form>
+                        </div>
+                        
+                        <!-- Subtotal -->
+                        <p style="margin-top: var(--spacing-sm); font-weight: 600;">
+                            Subtotal: ₹<span th:text="${item.subtotal}">0.00</span>
+                        </p>
+                    </div>
+                    
+                    <!-- Remove Button -->
+                    <div>
+                        <form th:action="@{/cart/remove}" method="post">
+                            <input type="hidden" name="cartItemId" th:value="${item.id}" />
+                            <button type="submit" class="btn btn-danger btn-sm">Remove</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cart Summary Section -->
+            <div class="cart-summary">
+                <h2 class="summary-title">Order Summary</h2>
+                
+                <div class="summary-row">
+                    <span>Items:</span>
+                    <span th:text="${cart.items.size()}">0</span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Subtotal:</span>
+                    <span>₹<span th:text="${cart.totalPrice}">0.00</span></span>
+                </div>
+                
+                <div class="summary-row">
+                    <span>Shipping:</span>
+                    <span style="color: var(--secondary-color);">FREE</span>
+                </div>
+                
+                <div class="summary-row summary-total">
+                    <span>Total:</span>
+                    <span>₹<span th:text="${cart.totalPrice}">0.00</span></span>
+                </div>
+                
+                <!-- Checkout Button -->
+                <form th:action="@{/checkout}" method="post" style="margin-top: var(--spacing-md);">
+                    <button type="submit" class="btn btn-primary btn-block btn-lg">
+                        Proceed to Checkout
+                    </button>
+                </form>
+                
+                <a href="/products" class="btn btn-outline btn-block" style="margin-top: var(--spacing-sm);">
+                    Continue Shopping
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

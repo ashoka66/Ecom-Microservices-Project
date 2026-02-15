@@ -1,28 +1,92 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Orders</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - E-Commerce</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/products" class="navbar-brand">🛒 ShopMart</a>
+            
+            <ul class="navbar-menu">
+                <li><a href="/products">Products</a></li>
+                <li><a href="/cart">🛒 Cart</a></li>
+                <li><a href="/orders" style="color: var(--primary-color);">My Orders</a></li>
+                <li><a href="/profile">Profile</a></li>
+                <li>
+                    <div class="navbar-user">
+                        <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
+                        <span th:text="${username}">User</span>
+                    </div>
+                </li>
+                <li>
+                    <form th:action="@{/auth/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-sm btn-outline">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
 
-    <h2>Your Orders Page</h2>
-    
-    <p>Welcome, <span th:text="${username}">User</span></p>
+    <!-- Main Content -->
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">My Orders</h1>
+            <p class="page-subtitle">Track and manage your orders</p>
+        </div>
 
-    <p th:if="${orders == null or orders.isEmpty()}">
-        No orders available yet. (Order service is not running)
-    </p>
+        <!-- Empty State -->
+        <div th:if="${orders == null or orders.isEmpty()}" class="empty-state">
+            <div class="empty-state-icon">📦</div>
+            <h2 class="empty-state-title">No orders yet</h2>
+            <p class="empty-state-text">Start shopping to see your orders here!</p>
+            <a href="/products" class="btn btn-primary btn-lg">Start Shopping</a>
+        </div>
 
-    <ul th:if="${orders != null and !orders.isEmpty()}">
-        <li th:each="o : ${orders}">
-            Product ID: <span th:text="${o['productId']}">0</span>,
-            Quantity: <span th:text="${o['quantity']}">0</span>,
-            Status: <span th:text="${o['status']}">Pending</span>
-        </li>
-    </ul>
-
-    <br>
-    <a href="/products">Back to Products</a>
-
+        <!-- Orders List -->
+        <div class="orders-list" th:if="${orders != null and !orders.isEmpty()}">
+            <div class="order-card" th:each="order : ${orders}">
+                <!-- Order Header -->
+                <div class="order-header">
+                    <div>
+                        <span class="order-id">Order #<span th:text="${order['id']}">0</span></span>
+                    </div>
+                    <div>
+                        <span 
+                            class="order-status"
+                            th:classappend="${order['status'] == 'CREATED' ? 'status-created' : (order['status'] == 'COMPLETED' ? 'status-completed' : 'status-pending')}"
+                            th:text="${order['status']}"
+                        >
+                            Status
+                        </span>
+                    </div>
+                </div>
+                
+                <!-- Order Details -->
+                <div class="order-details">
+                    <div class="order-detail-item">
+                        <div class="detail-label">Product ID</div>
+                        <div class="detail-value" th:text="${order['productId']}">0</div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="detail-label">Quantity</div>
+                        <div class="detail-value" th:text="${order['quantity']}">0</div>
+                    </div>
+                    
+                    <div class="order-detail-item">
+                        <div class="detail-label">Total Price</div>
+                        <div class="detail-value" style="color: var(--primary-color);">
+                            ₹<span th:text="${order['totalPrice']}">0.00</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
