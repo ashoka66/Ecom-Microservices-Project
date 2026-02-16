@@ -2,7 +2,10 @@ package com.ak.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import com.ak.entity.Notification;
+
 
 public interface INotificationService {
 	

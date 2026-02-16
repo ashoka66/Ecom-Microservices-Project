@@ -89,7 +89,7 @@ public class AdminController {
 		
 		try {
 			HttpHeaders headers= new HttpHeaders();
-			headers.set("X-Internal-Calls", "AUTH-SERVICE");
+			headers.set("X-Internal-Calls", "AUTH_SERVICE");
 			headers.setContentType(MediaType.APPLICATION_JSON);
 			
 			//create product json
@@ -120,7 +120,7 @@ public class AdminController {
 		try {
 			
 			HttpHeaders headers= new HttpHeaders();
-			headers.set("X-Internal-Calls", "AUTH-SERVICE");
+			headers.set("X-Internal-Calls", "AUTH_SERVICE");
 			HttpEntity<String> entity=new HttpEntity<>(headers);
 			
 			restTemplate.exchange("http://localhost:8086/products/" + id, HttpMethod.DELETE,entity,String.class);

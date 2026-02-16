@@ -2,29 +2,21 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Shopping Cart - E-Commerce</title>
+    <title>Cart</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
-    <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="/products" class="navbar-brand">🛒 ShopMart</a>
-            
+            <a href="/products" class="navbar-brand">ShopMart</a>
             <ul class="navbar-menu">
                 <li><a href="/products">Products</a></li>
-                <li><a href="/cart" style="color: var(--primary-color);">🛒 Cart</a></li>
-                <li><a href="/orders">My Orders</a></li>
+                <li><a href="/cart">Cart</a></li>
+                <li><a href="/orders">Orders</a></li>
                 <li><a href="/profile">Profile</a></li>
+                <li><span th:text="${username}">User</span></li>
                 <li>
-                    <div class="navbar-user">
-                        <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
-                        <span th:text="${username}">User</span>
-                    </div>
-                </li>
-                <li>
-                    <form th:action="@{/auth/logout}" method="post" style="margin: 0;">
+                    <form th:action="@{/auth/logout}" method="post" style="margin:0;">
                         <button type="submit" class="btn btn-sm btn-outline">Logout</button>
                     </form>
                 </li>
@@ -32,112 +24,46 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
     <div class="container">
-        <div class="page-header">
-            <h1 class="page-title">Shopping Cart</h1>
-            <p class="page-subtitle">Review your items before checkout</p>
+        <h1>Shopping Cart</h1>
+
+        <div th:if="${cart == null or cart.items == null or cart.items.isEmpty()}">
+            <p>Your cart is empty</p>
+            <a href="/products" class="btn btn-primary">Continue Shopping</a>
         </div>
 
-        <!-- Empty Cart -->
-        <div th:if="${cart.items == null or cart.items.isEmpty()}" class="empty-state">
-            <div class="empty-state-icon">🛒</div>
-            <h2 class="empty-state-title">Your cart is empty</h2>
-            <p class="empty-state-text">Add some products to get started!</p>
-            <a href="/products" class="btn btn-primary btn-lg">Continue Shopping</a>
-        </div>
-
-        <!-- Cart with Items -->
-        <div class="cart-container" th:if="${cart.items != null and !cart.items.isEmpty()}">
-            <!-- Cart Items Section -->
-            <div class="cart-items">
-                <h2 style="margin-bottom: var(--spacing-lg);">Cart Items</h2>
-                
-                <div class="cart-item" th:each="item : ${cart.items}">
-                    <!-- Product Image -->
-                    <img 
-                        th:src="${item.productImageUrl != null ? item.productImageUrl : 'https://via.placeholder.com/100?text=No+Image'}" 
-                        alt="Product"
-                        class="cart-item-img"
-                    />
+        <div th:if="${cart != null and cart.items != null and !cart.items.isEmpty()}">
+            <div style="display:flex; gap:2rem;">
+                <div style="flex:2;">
+                    <h2>Items</h2>
                     
-                    <!-- Product Details -->
-                    <div class="cart-item-details">
-                        <h3 class="cart-item-name" th:text="${item.productName}">Product Name</h3>
-                        <p class="cart-item-price">₹<span th:text="${item.productPrice}">0.00</span> per unit</p>
+                    <div th:each="item : ${cart.items}" style="border:1px solid #ddd; padding:1rem; margin-bottom:1rem;">
+                        <img th:src="${item.productImageUrl}" alt="Product" style="width:100px; height:100px;" onerror="this.src='https://via.placeholder.com/100'" />
                         
-                        <!-- Quantity Controls -->
-                        <div class="cart-item-quantity">
-                            <form th:action="@{/cart/update}" method="post" style="display: inline;">
-                                <input type="hidden" name="cartItemId" th:value="${item.id}" />
-                                <input type="hidden" name="quantity" th:value="${item.quantity - 1}" />
-                                <button type="submit" class="quantity-btn" th:disabled="${item.quantity <= 1}">-</button>
-                            </form>
-                            
-                            <input 
-                                type="number" 
-                                class="quantity-input" 
-                                th:value="${item.quantity}" 
-                                readonly
-                            />
-                            
-                            <form th:action="@{/cart/update}" method="post" style="display: inline;">
-                                <input type="hidden" name="cartItemId" th:value="${item.id}" />
-                                <input type="hidden" name="quantity" th:value="${item.quantity + 1}" />
-                                <button type="submit" class="quantity-btn">+</button>
-                            </form>
-                        </div>
+                        <h3 th:text="${item.productName}">Product</h3>
+                        <p>Price: Rs. <span th:text="${item.productPrice}">0</span></p>
+                        <p>Quantity: <span th:text="${item.quantity}">0</span></p>
+                        <p><strong>Subtotal: Rs. <span th:text="${item.productPrice * item.quantity}">0</span></strong></p>
                         
-                        <!-- Subtotal -->
-                        <p style="margin-top: var(--spacing-sm); font-weight: 600;">
-                            Subtotal: ₹<span th:text="${item.subtotal}">0.00</span>
-                        </p>
-                    </div>
-                    
-                    <!-- Remove Button -->
-                    <div>
-                        <form th:action="@{/cart/remove}" method="post">
+                        <form th:action="@{/cart/remove}" method="post" style="display:inline;">
                             <input type="hidden" name="cartItemId" th:value="${item.id}" />
                             <button type="submit" class="btn btn-danger btn-sm">Remove</button>
                         </form>
                     </div>
                 </div>
-            </div>
 
-            <!-- Cart Summary Section -->
-            <div class="cart-summary">
-                <h2 class="summary-title">Order Summary</h2>
-                
-                <div class="summary-row">
-                    <span>Items:</span>
-                    <span th:text="${cart.items.size()}">0</span>
+                <div style="flex:1;">
+                    <h2>Summary</h2>
+                    <p>Items: <span th:text="${cart.items.size()}">0</span></p>
+                    <p>Shipping: FREE</p>
+                    <p><strong>Total: Rs. <span th:text="${cart.totalPrice}">0</span></strong></p>
+                    
+                    <form th:action="@{/cart/place-order}" method="post">
+                        <button type="submit" class="btn btn-primary btn-block btn-lg">Place Order</button>
+                    </form>
+                    
+                    <a href="/products" class="btn btn-outline btn-block">Continue Shopping</a>
                 </div>
-                
-                <div class="summary-row">
-                    <span>Subtotal:</span>
-                    <span>₹<span th:text="${cart.totalPrice}">0.00</span></span>
-                </div>
-                
-                <div class="summary-row">
-                    <span>Shipping:</span>
-                    <span style="color: var(--secondary-color);">FREE</span>
-                </div>
-                
-                <div class="summary-row summary-total">
-                    <span>Total:</span>
-                    <span>₹<span th:text="${cart.totalPrice}">0.00</span></span>
-                </div>
-                
-                <!-- Checkout Button -->
-                <form th:action="@{/checkout}" method="post" style="margin-top: var(--spacing-md);">
-                    <button type="submit" class="btn btn-primary btn-block btn-lg">
-                        Proceed to Checkout
-                    </button>
-                </form>
-                
-                <a href="/products" class="btn btn-outline btn-block" style="margin-top: var(--spacing-sm);">
-                    Continue Shopping
-                </a>
             </div>
         </div>
     </div>

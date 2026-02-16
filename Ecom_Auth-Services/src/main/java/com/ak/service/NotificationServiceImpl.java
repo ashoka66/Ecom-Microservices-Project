@@ -3,10 +3,13 @@ package com.ak.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.ak.entity.Notification;
 import com.ak.repository.NotificationRepository;
 
+
+@Service
 public class NotificationServiceImpl implements INotificationService {
 	
 	@Autowired

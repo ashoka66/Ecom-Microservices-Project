@@ -42,8 +42,14 @@ public class CartItem {
     
     
     //calculate sub total for this item
-    @Transient
+//    @Transient
+    
     public Double getSubTotal() {
+    	
+    	
+    	 if(productPrice==null || quantity == null) {
+    		 return 0.0;
+    	 }
     	return productPrice * quantity;
     }
 	

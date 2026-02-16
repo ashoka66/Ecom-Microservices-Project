@@ -46,7 +46,7 @@ public class UiController {
     // Home / Dashboard - redirects based on user role
     //Admin -> Admin Dashboard 
     //user -> Proudct catalog
-    
+    @GetMapping("/")
     public String home(Principal principal) {
     	
     	if(principal == null) {
@@ -68,14 +68,23 @@ public class UiController {
     //products page  - main catalog for users
     
     //show all products  with add to cart functionality
-    
+    @GetMapping("/products")
     public String productsPage(Model model, Principal principal) {
+    	
+    	
+    	 // Check principal first
+        if (principal == null) {
+            return "redirect:/login";
+        }
+        
+        String username = principal.getName();
+        System.out.println("✅ Logged in user: " + username);
     	
     	 try {
     		 
     		 //Fetch Products from product serivce
     		 HttpHeaders headers=new HttpHeaders();
-    		 headers.set("X-Internal-Calls", "AUTH-SERVICE");
+    		 headers.set("X-Internal-Calls", "AUTH_SERVICE");
     		 HttpEntity<String> entity=new HttpEntity<>(headers);
     		 
     		 //accept raw response
@@ -99,6 +108,7 @@ public class UiController {
     		
     		model.addAttribute("unreadNotifications",unreadNotifications);
     		model.addAttribute("username",principal.getName());
+    		
     		model.addAttribute("products",products);
     		model.addAttribute("cartItemCount", cartItemCount);
     		model.addAttribute("user", user);
@@ -109,6 +119,7 @@ public class UiController {
     	 catch(Exception e) {
     		 System.out.println("Error loading products" + e.getMessage());
     		 model.addAttribute("products", new ArrayList<>());
+    		 model.addAttribute("username", "Guest");
     	 }
     	 
     	 return "products";

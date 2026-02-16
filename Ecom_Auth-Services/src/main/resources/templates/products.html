@@ -10,20 +10,20 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="/products" class="navbar-brand">ShopMart</a>
+            <a href="/products" class="navbar-brand">🛒 ShopMart</a>
             
             <ul class="navbar-menu">
                 <li><a href="/products">Products</a></li>
                 <li>
                     <a href="/cart">
-                         Cart
+                        🛒 Cart
                         <span class="navbar-badge" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
                     </a>
                 </li>
                 <li><a href="/orders">My Orders</a></li>
                 <li>
                     <a href="/profile">
-                         Notifications
+                        🔔 Notifications
                         <span class="navbar-badge" th:if="${unreadNotifications > 0}" th:text="${unreadNotifications}">0</span>
                     </a>
                 </li>
@@ -41,30 +41,25 @@
             </ul>
         </div>
     </nav>
-    
-    
+
+    <!-- Main Content -->
     <div class="container">
-    
-     <div class="page-header">
+        <div class="page-header">
             <h1 class="page-title">Discover Amazing Products</h1>
             <p class="page-subtitle">Shop from our curated collection</p>
         </div>
-        
-          <!-- Empty State -->
+
+        <!-- Empty State -->
         <div th:if="${products == null or products.isEmpty()}" class="empty-state">
-            <div class="empty-state-icon"></div>
+            <div class="empty-state-icon">📦</div>
             <h2 class="empty-state-title">No Products Available</h2>
             <p class="empty-state-text">Check back soon for new arrivals!</p>
         </div>
-        
-        
-        
+
         <!-- Products Grid -->
         <div class="products-grid" th:if="${products != null and !products.isEmpty()}">
-        
-                 <div class="card product-card" th:each="product : ${products}">
-                 
-                 <!-- Product Badge -->
+            <div class="card product-card" th:each="product : ${products}">
+                <!-- Product Badge -->
                 <span class="product-badge" th:if="${product['stock'] < 10}">Low Stock</span>
                 
                 <!-- Product Image -->
@@ -74,29 +69,24 @@
                     class="card-img"
                 />
                 
-                
-                        <!-- Product Details -->
-                       <div class="card-body">
-                       
-                       <h3 class="card-title" th:text="${product['name']}">Product Name</h3>
-                      <p class="card-text" th:text="${product['description']}">Product description</p>
-                      
-                      <div class="product-stock">
+                <!-- Product Details -->
+                <div class="card-body">
+                    <h3 class="card-title" th:text="${product['name']}">Product Name</h3>
+                    <p class="card-text" th:text="${product['description']}">Product description</p>
+                    
+                    <div class="product-stock">
                         <span th:classappend="${product['stock'] > 10 ? 'stock-available' : 'stock-low'}">
                             <strong>Stock:</strong> 
                             <span th:text="${product['stock']}">0</span> units
                         </span>
                     </div>
-                       
-                       <div class="card-price">
+                    
+                    <div class="card-price">
                         ₹<span th:text="${product['price']}">0.00</span>
                     </div>
-                       
-                        </div> <!-- Product Details -->
-                        
-                        
-                        
-                        <!-- Add to Cart Button -->
+                </div>
+                
+                <!-- Add to Cart Button -->
                 <div class="card-footer">
                     <form th:action="@{/cart/add}" method="post" style="margin: 0;">
                         <input type="hidden" name="productId" th:value="${product['id']}" />
@@ -110,16 +100,9 @@
                             <span th:if="${product['stock'] <= 0}">Out of Stock</span>
                         </button>
                     </form>
-                </div> <!-- Add to Cart Button -->
-        
-        
-                 </div>  <!-- Products Grid -->
-        
-         </div>    <!-- page-header -->
-        
-     </div> <!-- container -->
-    
-    
-    
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
