@@ -78,7 +78,7 @@ public class UiController {
         }
         
         String username = principal.getName();
-        System.out.println("✅ Logged in user: " + username);
+        System.out.println(" Logged in user: " + username);
     	
     	 try {
     		 

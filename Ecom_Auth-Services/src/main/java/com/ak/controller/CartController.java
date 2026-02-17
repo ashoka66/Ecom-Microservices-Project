@@ -8,6 +8,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -93,6 +94,7 @@ public class CartController {
 
 	
 	//Remove item from cart
+	@DeleteMapping("/delete/{cartItemId}/")
 	public String removeItem(@RequestParam Long cartItemId, Principal principal) {
 		
 		User user=userRepository.findByEmail(principal.getName())
@@ -106,6 +108,7 @@ public class CartController {
 	
 	
 	//simple place order - convert cart items to orders 
+	@PostMapping("/place-order")
 	public String placeOrderFromCart(Principal principal) {
 		
 		try {
@@ -155,7 +158,7 @@ public class CartController {
 		try {
 			HttpHeaders headers=new HttpHeaders();
 			headers.setContentType(MediaType.APPLICATION_JSON);
-			 headers.set("X-Internal-Call", "AUTH_SERVICE");
+//			 headers.set("X-Internal-Calls", "AUTH_SERVICE");
 			 
 			 String orderJson=String.format(
 			            "{\"userId\":%d,\"productId\":%d,\"quantity\":%d}",
@@ -174,7 +177,7 @@ public class CartController {
 			 
 		}
 		catch (Exception e) {
-	        System.out.println("❌ Failed to create order: " + e.getMessage());
+	        System.out.println("Failed to create order: " + e.getMessage());
 	        throw new RuntimeException("Order creation failed");
 	    }
 	}
