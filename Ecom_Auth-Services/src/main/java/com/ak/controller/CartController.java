@@ -69,11 +69,13 @@ public class CartController {
 			User user=userRepository.findByEmail(principal.getName())
 					.orElseThrow(()-> new RuntimeException("user not found"));
 			cartService.addUser(user.getId(), productId, quantity);
-			return "redirect:/products?success=added";
+			
+			 System.out.println(" Product added to cart, redirecting...");
+			  return "redirect:/products?success=added";
 		}
 		catch(Exception e) {
 			System.out.println("Error adding to cart " + e.getMessage());
-			return "redirect:/products?error=failed"; 
+			return "redirect:/products?error=failed";
 		}
 		
 	}
