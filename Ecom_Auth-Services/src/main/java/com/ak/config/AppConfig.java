@@ -21,8 +21,8 @@ public class AppConfig {
         	 // Add internal service header
             request.getHeaders().add("X-Internal-Calls", "AUTH_SERVICE");
          //  ADDED DEBUG LOGGING
-            System.out.println("🚀 RestTemplate Request:");
-            System.out.println("   URL: " + request.getURI());
+            System.out.println(" RestTemplate Request:");
+            System.out.println("   URL : " + request.getURI());
             System.out.println("   Headers: " + request.getHeaders());
             return execution.execute(request, body);
         });

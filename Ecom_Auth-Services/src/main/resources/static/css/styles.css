@@ -239,7 +239,7 @@ a:hover {
 }
 
 .btn-block {
-    width: 100%;
+    width: 30%;
     display: block;
 }
 
@@ -363,7 +363,7 @@ a:hover {
 }
 
 .form-control {
-    width: 100%;
+    width: 40%;
     padding: 0.75rem;
     border: 2px solid #e5e7eb;
     border-radius: var(--radius-md);

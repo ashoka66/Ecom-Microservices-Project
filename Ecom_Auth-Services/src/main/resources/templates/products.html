@@ -41,9 +41,23 @@
             </ul>
         </div>
     </nav>
+    
+   
 
     <!-- Main Content -->
     <div class="container">
+    
+      <!-- success alert -->
+            <div th:if="${param.success=='added'}" class="alert alert-success" style="margin-top:1rem;">
+              Product Added Successfully
+            </div>
+         
+         <!-- Error Alert -->
+         <div th:if="${param.error=='failed'}" class= "alert alert-error" style="margin-top:1rem;">
+           Failed to add product to cart. Please try again.
+           </div>
+            
+        
         <div class="page-header">
             <h1 class="page-title">Discover Amazing Products</h1>
             <p class="page-subtitle">Shop from our curated collection</p>
