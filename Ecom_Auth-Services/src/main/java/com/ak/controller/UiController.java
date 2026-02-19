@@ -118,8 +118,11 @@ public class UiController {
     	 }
     	 catch(Exception e) {
     		 System.out.println("Error loading products" + e.getMessage());
-    		 model.addAttribute("products", new ArrayList<>());
-    		 model.addAttribute("username", "Guest");
+    		//  Set safe default values
+    	        model.addAttribute("products", new ArrayList<>());
+    	        model.addAttribute("username", username);
+    	        model.addAttribute("cartItemCount", 0);
+    	        model.addAttribute("unreadNotifications", 0L);
     	 }
     	 
     	 return "products";

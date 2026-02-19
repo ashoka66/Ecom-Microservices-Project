@@ -73,7 +73,7 @@ public class CartController {
 			 System.out.println(" Product added to cart, redirecting...");
 			  return "redirect:/products?success=added";
 		}
-		catch(Exception e) {
+		catch(Exception e) { 
 			System.out.println("Error adding to cart " + e.getMessage());
 			return "redirect:/products?error=failed";
 		}
