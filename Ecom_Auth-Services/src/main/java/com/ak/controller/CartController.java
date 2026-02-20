@@ -71,11 +71,11 @@ public class CartController {
 			cartService.addUser(user.getId(), productId, quantity);
 			
 			 System.out.println(" Product added to cart, redirecting...");
-			  return "redirect:/products?success=added";
+			  return "redirect:/products";
 		}
 		catch(Exception e) { 
 			System.out.println("Error adding to cart " + e.getMessage());
-			return "redirect:/products?error=failed";
+			return "redirect:/products";
 		}
 		
 	}
@@ -97,7 +97,7 @@ public class CartController {
 
 	
 	//Remove item from cart
-	@DeleteMapping("/delete/{cartItemId}/")
+	@DeleteMapping("remove/{cartItemId}/")
 	public String removeItem(@RequestParam Long cartItemId, Principal principal) {
 		
 		User user=userRepository.findByEmail(principal.getName())
@@ -125,6 +125,9 @@ public class CartController {
 			return "redirect:/cart?error:empty";
 		}
 		
+		//calculate ordre amount before clearing cart
+		Double totalAmount=cart.getTotalPrice();
+		
 		//create order for each cart item
 		for(CartItem item : cart.getItems()) {
 			
@@ -138,9 +141,11 @@ public class CartController {
 	
 		
 		notificationService.createNotification(user.getId(), 
-				                  "Order placed successfully !  Total: Rs" + 
-		                        cart.getTotalPrice(), "ORDER_PLACED");
+				                  "Order placed successfully !  Total: Rs " + 
+		                        totalAmount, "ORDER_PLACED");
 		
+		System.out.println(" Order placed successfully with total: Rs." + totalAmount);
+
 		
 		return "redirect:/cart?success=true";
 		

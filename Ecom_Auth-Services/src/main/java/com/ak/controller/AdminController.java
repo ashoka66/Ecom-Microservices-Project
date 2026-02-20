@@ -32,7 +32,7 @@ public class AdminController {
 	
 	//admin dashboard - overview of products and orders
 	
-	
+	@GetMapping
 	public String adminDashboard(Model model, Principal principal) {
 		
 		
