@@ -158,8 +158,6 @@ public class CartServiceImpl implements ICartService {
 		
 		cartItemRepository.delete(item);
 		
-		
-		
 		return cartRepository.findById(cart.getId()).orElse(cart);
 	}
 

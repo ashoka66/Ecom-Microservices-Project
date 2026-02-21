@@ -1,11 +1,14 @@
 package com.ak.controller;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -62,20 +65,33 @@ public class CartController {
 	
 	@PostMapping("/add")
 	@ResponseBody
-	public String addToCart(@RequestParam Long productId, @RequestParam(defaultValue="1") Integer quantity, Principal principal) {
+	public ResponsEntity<Map<String,Object>> addToCart(@RequestParam Long productId, @RequestParam(defaultValue="1") Integer quantity, Principal principal) {
 		
+		Map<String,Object> response=new HashMap<>();
 		try {
 			
 			User user=userRepository.findByEmail(principal.getName())
 					.orElseThrow(()-> new RuntimeException("user not found"));
+			
+			
 			cartService.addUser(user.getId(), productId, quantity);
 			
-			 System.out.println(" Product added to cart, redirecting...");
-			  return "redirect:/products";
+			//Get updated cart item count
+			Cart cart=cartService.getCartByUserId(user.getId());
+			int cartItemCount=cart.getItems().size();
+			
+			response.put("success", true);
+			response.put("message", "product Added to cart!");
+			response.put("cartCount", cartItemCount);
+			
+			 
+			  return ResponseEntity.ok(response);
 		}
 		catch(Exception e) { 
-			System.out.println("Error adding to cart " + e.getMessage());
-			return "redirect:/products";
+			System.out.println(" Add to cart error: " + e.getMessage());
+	        response.put("success", false);
+	        response.put("message", "Failed to add product");
+	        return ResponseEntity.status(500).body(response);
 		}
 		
 	}
@@ -83,8 +99,8 @@ public class CartController {
 	
 	
 	//update cartItem quantity
-	@PostMapping("/update")
-    public String removeItem(@RequestParam Long cartItemId, @RequestParam Integer quantity, Principal principal) {
+	@PostMapping("/update/{cartItem}/")
+    public String updateItem(@RequestParam Long cartItemId, @RequestParam Integer quantity, Principal principal) {
     	
 		User user=userRepository.findByEmail(principal.getName())
 				.orElseThrow(()-> new RuntimeException("user not found"));
