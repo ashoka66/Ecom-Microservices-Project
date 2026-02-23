@@ -63,40 +63,65 @@ public class CartController {
 	
 	//add product to cart(ajax endpoint)
 	
-	@PostMapping("/add")
-	@ResponseBody
-	public ResponsEntity<Map<String,Object>> addToCart(@RequestParam Long productId, @RequestParam(defaultValue="1") Integer quantity, Principal principal) {
-		
-		Map<String,Object> response=new HashMap<>();
-		try {
-			
-			User user=userRepository.findByEmail(principal.getName())
-					.orElseThrow(()-> new RuntimeException("user not found"));
-			
-			
-			cartService.addUser(user.getId(), productId, quantity);
-			
-			//Get updated cart item count
-			Cart cart=cartService.getCartByUserId(user.getId());
-			int cartItemCount=cart.getItems().size();
-			
-			response.put("success", true);
-			response.put("message", "product Added to cart!");
-			response.put("cartCount", cartItemCount);
-			
-			 
-			  return ResponseEntity.ok(response);
-		}
-		catch(Exception e) { 
-			System.out.println(" Add to cart error: " + e.getMessage());
-	        response.put("success", false);
-	        response.put("message", "Failed to add product");
-	        return ResponseEntity.status(500).body(response);
-		}
-		
+	/*
+	 * @PostMapping("/add")
+	 * 
+	 * @ResponseBody public ResponseEntity<Map<String,Object>>
+	 * addToCart(@RequestParam Long productId, @RequestParam(defaultValue="1")
+	 * Integer quantity, Principal principal) {
+	 * 
+	 * Map<String,Object> response=new HashMap<>(); try {
+	 * 
+	 * User user=userRepository.findByEmail(principal.getName()) .orElseThrow(()->
+	 * new RuntimeException("user not found"));
+	 * 
+	 * 
+	 * cartService.addUser(user.getId(), productId, quantity);
+	 * 
+	 * //Get updated cart item count Cart
+	 * cart=cartService.getCartByUserId(user.getId()); int
+	 * cartItemCount=cart.getItems().size();
+	 * 
+	 * response.put("success", true); response.put("message",
+	 * "product Added to cart!"); response.put("cartCount", cartItemCount);
+	 * 
+	 * 
+	 * return ResponseEntity.ok(response); } catch(Exception e) {
+	 * System.out.println(" Add to cart error: " + e.getMessage());
+	 * response.put("success", false); response.put("message",
+	 * "Failed to add product"); return ResponseEntity.status(500).body(response); }
+	 * 
+	 * }
+	 * 
+	 */
+	
+	/**
+	 * Add to cart (simple form submit - no JSON response)
+	 */
+	@PostMapping("/add-simple")
+	public ResponseEntity<String> addToCartSimple(
+	        @RequestParam Long productId,
+	        @RequestParam(defaultValue = "1") Integer quantity,
+	        Principal principal) {
+	    
+	    try {
+	        System.out.println("🛒 Simple add to cart: productId=" + productId);
+	        
+	        User user = userRepository.findByEmail(principal.getName())
+	            .orElseThrow(() -> new RuntimeException("User not found"));
+	        
+	        cartService.addUser(user.getId(), productId, quantity);
+	        
+	        System.out.println("✅ Product added successfully");
+	        
+	        return ResponseEntity.ok("success");
+	        
+	    } catch (Exception e) {
+	        System.out.println("❌ Error: " + e.getMessage());
+	        e.printStackTrace();
+	        return ResponseEntity.status(500).body("error");
+	    }
 	}
-	
-	
 	
 	//update cartItem quantity
 	@PostMapping("/update/{cartItem}/")

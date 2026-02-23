@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
@@ -48,12 +48,12 @@
     </style>
 </head>
 <body>
-    <!-- Toast Notification -->
+    Toast Notification
     <div id="toast" class="toast">
         <span id="toast-message"></span>
     </div>
 
-    <!-- Navigation Bar -->
+    Navigation Bar
     <nav class="navbar">
         <div class="navbar-container">
             <a href="/products" class="navbar-brand">ShopMart</a>
@@ -88,35 +88,35 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+    Main Content
     <div class="container">
         <div class="page-header">
             <h1 class="page-title">Discover Amazing Products</h1>
             <p class="page-subtitle">Shop from our curated collection</p>
         </div>
 
-        <!-- Empty State -->
+        Empty State
         <div th:if="${products == null or products.isEmpty()}" class="empty-state">
             <div class="empty-state-icon">No Products</div>
             <h2 class="empty-state-title">No Products Available</h2>
             <p class="empty-state-text">Check back soon for new arrivals!</p>
         </div>
 
-        <!-- Products Grid -->
+        Products Grid
         <div class="products-grid" th:if="${products != null and !products.isEmpty()}">
             <div class="card product-card" th:each="product : ${products}">
                 
-                <!-- Product Badge -->
+                Product Badge
                 <span class="product-badge" th:if="${product['stock'] < 10}">Low Stock</span>
                 
-                <!-- Product Image -->
+                Product Image
                 <img 
                     th:src="${product['imageUrl'] != null ? product['imageUrl'] : 'https://via.placeholder.com/300x200?text=No+Image'}" 
                     alt="Product Image"
                     class="card-img"
                 />
                 
-                <!-- Product Details -->
+                Product Details
                 <div class="card-body">
                     <h3 class="card-title" th:text="${product['name']}">Product Name</h3>
                     <p class="card-text" th:text="${product['description']}">Product description</p>
@@ -133,7 +133,7 @@
                     </div>
                 </div>
                 
-                <!-- Add to Cart Button -->
+                Add to Cart Button
                 <div class="card-footer">
                     <button 
                         class="btn btn-primary btn-block add-to-cart-btn"
@@ -148,7 +148,7 @@
         </div>
     </div>
 
-    <!-- JavaScript -->
+    JavaScript
     <script>
         // Add to cart via AJAX
         document.addEventListener('DOMContentLoaded', function() {
@@ -232,6 +232,196 @@
             setTimeout(() => {
                 toast.classList.remove('show');
             }, 3000);
+        }
+    </script>
+</body>
+</html>
+ -->
+ 
+ <!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Products - E-Commerce</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .toast {
+            position: fixed;
+            top: 80px;
+            right: 20px;
+            background: #f0fdf4;
+            border-left: 4px solid #10b981;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 9999;
+        }
+        
+        .toast.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hidden iframe for form submission -->
+    <iframe name="cart-frame" style="display:none;"></iframe>
+    
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">Product added to cart!</div>
+
+    <!-- Navigation Bar -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <a href="/products" class="navbar-brand">ShopMart</a>
+            
+            <ul class="navbar-menu">
+                <li><a href="/products">Products</a></li>
+                <li>
+                    <a href="/cart">
+                        Cart
+                        <span class="navbar-badge" id="cart-count" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
+                    </a>
+                </li>
+                <li><a href="/orders">My Orders</a></li>
+                <li>
+                    <a href="/profile">
+                        Notifications
+                        <span class="navbar-badge" th:if="${unreadNotifications > 0}" th:text="${unreadNotifications}">0</span>
+                    </a>
+                </li>
+                <li>
+                    <div class="navbar-user">
+                        <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
+                        <span th:text="${username}">User</span>
+                    </div>
+                </li>
+                <li>
+                    <form th:action="@{/auth/logout}" method="post" style="margin: 0;">
+                        <button type="submit" class="btn btn-sm btn-outline">Logout</button>
+                    </form>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="page-header">
+            <h1 class="page-title">Discover Amazing Products</h1>
+            <p class="page-subtitle">Shop from our curated collection</p>
+        </div>
+
+        <div th:if="${products == null or products.isEmpty()}" class="empty-state">
+            <div class="empty-state-icon">No Products</div>
+            <h2 class="empty-state-title">No Products Available</h2>
+        </div>
+
+        <div class="products-grid" th:if="${products != null and !products.isEmpty()}">
+            <div class="card product-card" th:each="product : ${products}">
+                <span class="product-badge" th:if="${product['stock'] < 10}">Low Stock</span>
+                
+                <img 
+                    th:src="${product['imageUrl'] != null ? product['imageUrl'] : 'https://via.placeholder.com/300x200?text=No+Image'}" 
+                    alt="Product"
+                    class="card-img"
+                />
+                
+                <div class="card-body">
+                    <h3 class="card-title" th:text="${product['name']}">Product</h3>
+                    <p class="card-text" th:text="${product['description']}">Description</p>
+                    
+                    <div class="product-stock">
+                        <span th:classappend="${product['stock'] > 10 ? 'stock-available' : 'stock-low'}">
+                            <strong>Stock:</strong> 
+                            <span th:text="${product['stock']}">0</span> units
+                        </span>
+                    </div>
+                    
+                    <div class="card-price">
+                        Rs. <span th:text="${product['price']}">0.00</span>
+                    </div>
+                </div>
+                
+                <div class="card-footer">
+                    <form 
+                        th:action="@{/cart/add-simple}" 
+                        method="post" 
+                        target="cart-frame"
+                        class="add-to-cart-form"
+                        th:attr="data-product-name=${product['name']}"
+                    >
+                        <input type="hidden" name="productId" th:value="${product['id']}" />
+                        <input type="hidden" name="quantity" value="1" />
+                        <button 
+                            type="submit" 
+                            class="btn btn-primary btn-block"
+                            th:disabled="${product['stock'] <= 0}"
+                        >
+                            <span th:if="${product['stock'] > 0}">Add to Cart</span>
+                            <span th:if="${product['stock'] <= 0}">Out of Stock</span>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentCartCount = parseInt(document.getElementById('cart-count')?.textContent || '0');
+        
+        document.querySelectorAll('.add-to-cart-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const button = this.querySelector('button');
+                const originalText = button.innerHTML;
+                
+                // Show loading
+                button.disabled = true;
+                button.innerHTML = 'Adding...';
+                
+                // After form submits to iframe
+                setTimeout(() => {
+                    // Increment cart count
+                    currentCartCount++;
+                    updateCartBadge(currentCartCount);
+                    
+                    // Show toast
+                    showToast();
+                    
+                    // Reset button
+                    button.disabled = false;
+                    button.innerHTML = originalText;
+                }, 500);
+            });
+        });
+        
+        function updateCartBadge(count) {
+            let badge = document.getElementById('cart-count');
+            
+            if (count > 0) {
+                if (badge) {
+                    badge.textContent = count;
+                } else {
+                    const cartLink = document.querySelector('a[href="/cart"]');
+                    badge = document.createElement('span');
+                    badge.id = 'cart-count';
+                    badge.className = 'navbar-badge';
+                    badge.textContent = count;
+                    cartLink.appendChild(badge);
+                }
+            }
+        }
+        
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3000);
         }
     </script>
 </body>
