@@ -105,19 +105,19 @@ public class CartController {
 	        Principal principal) {
 	    
 	    try {
-	        System.out.println("🛒 Simple add to cart: productId=" + productId);
+	        System.out.println("Simple add to cart: productId=" + productId);
 	        
 	        User user = userRepository.findByEmail(principal.getName())
 	            .orElseThrow(() -> new RuntimeException("User not found"));
 	        
 	        cartService.addUser(user.getId(), productId, quantity);
 	        
-	        System.out.println("✅ Product added successfully");
+	        System.out.println("Product added successfully");
 	        
 	        return ResponseEntity.ok("success");
 	        
 	    } catch (Exception e) {
-	        System.out.println("❌ Error: " + e.getMessage());
+	        System.out.println("Error: " + e.getMessage());
 	        e.printStackTrace();
 	        return ResponseEntity.status(500).body("error");
 	    }
@@ -168,6 +168,7 @@ public class CartController {
 		
 		//calculate ordre amount before clearing cart
 		Double totalAmount=cart.getTotalPrice();
+		int itemCount = cart.getItems().size();
 		
 		//create order for each cart item
 		for(CartItem item : cart.getItems()) {
@@ -188,7 +189,7 @@ public class CartController {
 		System.out.println(" Order placed successfully with total: Rs." + totalAmount);
 
 		
-		return "redirect:/cart?success=true";
+		return String.format("redirect:/cart?success=true&items=%d&total=%.2f", itemCount, totalAmount);
 		
 		}
 		catch(Exception e) {

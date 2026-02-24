@@ -6,6 +6,41 @@
     <link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
+
+
+  <!--ORDER SUCCESS MODEL -->
+  
+  <div class="successModal" class="model-overlay" style="display:none;">
+       <div class="modal-content">
+            <!--Animated Check -->
+            <div class="success-checkmark">
+       
+                <div class="check-icon">
+                   <span class="icon-line line-tip"></span>
+                   <span class="icon-line line-long"></span>
+                   <div class="icon-circle"> </div>
+                   <div class="icon-fix"></div>
+                  
+               </div>
+           </div>
+           
+           <!-- Success message  -->
+           <h2 class="model-title">Order Placed Successfully!</h2>
+           <p class="model-message" id="orderSummary">
+           
+            Your Order has been placed 
+           </p>
+           
+           <!-- Redirecting info  -->
+           <p class="model-redirect">
+             Redirecting to orders page... 
+           </p>
+           
+       </div>
+  </div>
+  
+  
+  
     <nav class="navbar">
         <div class="navbar-container">
             <a href="/products" class="navbar-brand">ShopMart</a>
@@ -67,5 +102,41 @@
             </div>
         </div>
     </div>
+    
+    <script>
+    //check if order was placed successfully
+    const urlParams= new URLSearchParams(window.location.search);
+    
+    if(urlParams.has('success') && urlParams.get('success') === 'true'){
+    	const itemCount =urlParams.get('items') || '0';
+    	const total=urlParams.get('total') || '0';
+    	
+    	
+    	//update modal message
+    	document.getElementById('orderSummary').textContent=
+    		`Your order of Rs.${total} with ${itemCount} item(s) has been placed !`;
+    		
+    		//show model
+    		showSuccessModel();
+    
+    }
+    
+    function showSuccessModel(){
+    	const modal = document.getElementById('successModal');
+    	modal.style.display='flex';
+    	
+    	//Add animation class
+    	setTimeout(()=>{
+    		modal.classList.add('show');
+    	},10);
+    	
+    	//Redirect to order page  after 3 seconds
+    	setTimout(()=>{
+    		window.location.href='/orders';
+    	},3000);
+    }
+    
+    
+    </script>
 </body>
 </html>
