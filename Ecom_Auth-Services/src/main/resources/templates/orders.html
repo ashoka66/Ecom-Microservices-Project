@@ -5,18 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Orders - E-Commerce</title>
     <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        /* Order-specific styles */
+        .order-timeline {
+            position: relative;
+            padding-left: 40px;
+            margin-top: 1.5rem;
+        }
+        
+        .order-timeline::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e2e8f0;
+        }
+        
+        .timeline-item {
+            position: relative;
+            padding-bottom: 1.5rem;
+        }
+        
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+        
+        .timeline-dot {
+            position: absolute;
+            left: -29px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #cbd5e0;
+            border: 3px solid white;
+            box-shadow: 0 0 0 2px #e2e8f0;
+        }
+        
+        .timeline-dot.active {
+            background: #4f46e5;
+            box-shadow: 0 0 0 2px #4f46e5, 0 0 0 4px #ddd6fe;
+        }
+        
+        .timeline-dot.completed {
+            background: #10b981;
+            box-shadow: 0 0 0 2px #10b981, 0 0 0 4px #d1fae5;
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="/products" class="navbar-brand">🛒 ShopMart</a>
+            <a href="/products" class="navbar-brand">ShopMart</a>
             
             <ul class="navbar-menu">
                 <li><a href="/products">Products</a></li>
-                <li><a href="/cart">🛒 Cart</a></li>
-                <li><a href="/orders" style="color: var(--primary-color);">My Orders</a></li>
-                <li><a href="/profile">Profile</a></li>
+                <li>
+                    <a href="/cart">
+                        Cart
+                        <span class="navbar-badge" th:if="${cartItemCount > 0}" th:text="${cartItemCount}">0</span>
+                    </a>
+                </li>
+                <li><a href="/orders" style="color: var(--primary-color); font-weight: 600;">My Orders</a></li>
+                <li>
+                    <a href="/profile">
+                        Notifications
+                        <span class="navbar-badge" th:if="${unreadNotifications > 0}" th:text="${unreadNotifications}">0</span>
+                    </a>
+                </li>
                 <li>
                     <div class="navbar-user">
                         <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">U</div>
@@ -36,57 +94,156 @@
     <div class="container">
         <div class="page-header">
             <h1 class="page-title">My Orders</h1>
-            <p class="page-subtitle">Track and manage your orders</p>
+            <p class="page-subtitle">Track your order status and delivery</p>
         </div>
 
         <!-- Empty State -->
         <div th:if="${orders == null or orders.isEmpty()}" class="empty-state">
-            <div class="empty-state-icon">📦</div>
+            <div class="empty-state-icon">No Orders</div>
             <h2 class="empty-state-title">No orders yet</h2>
             <p class="empty-state-text">Start shopping to see your orders here!</p>
             <a href="/products" class="btn btn-primary btn-lg">Start Shopping</a>
         </div>
 
         <!-- Orders List -->
-        <div class="orders-list" th:if="${orders != null and !orders.isEmpty()}">
-            <div class="order-card" th:each="order : ${orders}">
-                <!-- Order Header -->
-                <div class="order-header">
-                    <div>
-                        <span class="order-id">Order #<span th:text="${order['id']}">0</span></span>
-                    </div>
-                    <div>
+        <div th:if="${orders != null and !orders.isEmpty()}">
+            <div class="card" th:each="order : ${orders}" style="margin-bottom: 1.5rem;">
+                <div class="card-body">
+                    
+                    <!-- Order Header -->
+                    <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1.5rem;">
+                        <div>
+                            <h3 class="card-title" style="margin-bottom: 0.5rem;">
+                                Order #<span th:text="${order['id']}">1</span>
+                            </h3>
+                            <p style="color: #718096; font-size: 0.875rem;">
+                                Placed on <span th:text="${order['placedAt'] != null ? #strings.substring(order['placedAt'].toString(), 0, 19).replace('T', ' ') : 'N/A'}">Date</span>
+                            </p>
+                        </div>
+                        
+                        <!-- Status Badge -->
                         <span 
                             class="order-status"
-                            th:classappend="${order['status'] == 'CREATED' ? 'status-created' : (order['status'] == 'COMPLETED' ? 'status-completed' : 'status-pending')}"
-                            th:text="${order['status']}"
+                            th:classappend="${order['deliveryStatus'] == 'DELIVERED' ? 'status-completed' : 
+                                           order['deliveryStatus'] == 'OUT_FOR_DELIVERY' ? 'status-pending' : 
+                                           order['deliveryStatus'] == 'PROCESSING' ? 'status-created' : 
+                                           'status-created'}"
+                            th:text="${#strings.replace(order['deliveryStatus'], '_', ' ')}"
                         >
                             Status
                         </span>
                     </div>
-                </div>
-                
-                <!-- Order Details -->
-                <div class="order-details">
-                    <div class="order-detail-item">
-                        <div class="detail-label">Product ID</div>
-                        <div class="detail-value" th:text="${order['productId']}">0</div>
-                    </div>
-                    
-                    <div class="order-detail-item">
-                        <div class="detail-label">Quantity</div>
-                        <div class="detail-value" th:text="${order['quantity']}">0</div>
-                    </div>
-                    
-                    <div class="order-detail-item">
-                        <div class="detail-label">Total Price</div>
-                        <div class="detail-value" style="color: var(--primary-color);">
-                            ₹<span th:text="${order['totalPrice']}">0.00</span>
+
+                    <!-- Order Details -->
+                    <div style="background: #f7fafc; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                            <div>
+                                <p style="font-size: 0.75rem; color: #718096; margin-bottom: 0.25rem;">Product ID</p>
+                                <p style="font-weight: 600;" th:text="${order['productId']}">1</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 0.75rem; color: #718096; margin-bottom: 0.25rem;">Quantity</p>
+                                <p style="font-weight: 600;" th:text="${order['quantity']}">1</p>
+                            </div>
+                            <div>
+                                <p style="font-size: 0.75rem; color: #718096; margin-bottom: 0.25rem;">Total</p>
+                                <p style="font-weight: 600;">Rs. <span th:text="${order['totalPrice']}">0</span></p>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Delivery Timeline -->
+                    <div>
+                        <h4 style="font-size: 0.875rem; font-weight: 600; margin-bottom: 1rem; color: #4a5568;">
+                            Delivery Progress
+                        </h4>
+                        
+                        <div class="order-timeline">
+                            <!-- PLACED -->
+                            <div class="timeline-item">
+                                <div 
+                                    class="timeline-dot"
+                                    th:classappend="${order['deliveryStatus'] == 'PLACED' ? 'active' : 'completed'}"
+                                ></div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 0.875rem;">Order Placed</p>
+                                    <p style="font-size: 0.75rem; color: #718096;">Your order has been received</p>
+                                </div>
+                            </div>
+                            
+                            <!-- CONFIRMED -->
+                            <div class="timeline-item">
+                                <div 
+                                    class="timeline-dot"
+                                    th:classappend="${order['deliveryStatus'] == 'CONFIRMED' ? 'active' : 
+                                                   (order['deliveryStatus'] == 'PLACED' ? '' : 'completed')}"
+                                ></div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 0.875rem;">Order Confirmed</p>
+                                    <p style="font-size: 0.75rem; color: #718096;">Your order has been confirmed</p>
+                                </div>
+                            </div>
+                            
+                            <!-- PROCESSING -->
+                            <div class="timeline-item">
+                                <div 
+                                    class="timeline-dot"
+                                    th:classappend="${order['deliveryStatus'] == 'PROCESSING' ? 'active' : 
+                                                   (order['deliveryStatus'] == 'PLACED' or order['deliveryStatus'] == 'CONFIRMED' ? '' : 'completed')}"
+                                ></div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 0.875rem;">Processing</p>
+                                    <p style="font-size: 0.75rem; color: #718096;">Your order is being prepared</p>
+                                </div>
+                            </div>
+                            
+                            <!-- OUT_FOR_DELIVERY -->
+                            <div class="timeline-item">
+                                <div 
+                                    class="timeline-dot"
+                                    th:classappend="${order['deliveryStatus'] == 'OUT_FOR_DELIVERY' ? 'active' : 
+                                                   (order['deliveryStatus'] == 'DELIVERED' ? 'completed' : '')}"
+                                ></div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 0.875rem;">Out for Delivery</p>
+                                    <p style="font-size: 0.75rem; color: #718096;">Your order is on the way</p>
+                                </div>
+                            </div>
+                            
+                            <!-- DELIVERED -->
+                            <div class="timeline-item">
+                                <div 
+                                    class="timeline-dot"
+                                    th:classappend="${order['deliveryStatus'] == 'DELIVERED' ? 'completed' : ''}"
+                                ></div>
+                                <div>
+                                    <p style="font-weight: 600; font-size: 0.875rem;">Delivered</p>
+                                    <p style="font-size: 0.75rem; color: #718096;" th:if="${order['deliveredAt'] != null}">
+                                        Delivered on <span th:text="${#strings.substring(order['deliveredAt'].toString(), 0, 19).replace('T', ' ')}">Date</span>
+                                    </p>
+                                    <p style="font-size: 0.75rem; color: #718096;" th:if="${order['deliveredAt'] == null}">
+                                        Arriving soon...
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Auto-refresh script -->
+    <script>
+        // Auto-refresh page every 5 seconds to see live status updates
+        setTimeout(function() {
+            // Only refresh if there are orders and some are not delivered
+            const hasOrders = document.querySelectorAll('.card').length > 0;
+            if (hasOrders) {
+                location.reload();
+            }
+        }, 5000); // Refresh every 5 seconds
+    </script>
 </body>
 </html>

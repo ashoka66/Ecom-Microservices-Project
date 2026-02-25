@@ -1,5 +1,6 @@
 package com.ak.service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.http.HttpEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 import com.ak.dto.OrderRequestDto;
 import com.ak.dto.ProductResponse;
 import com.ak.entity.Order;
+import com.ak.enums.OrderStatus;
 import com.ak.feign.ProductClient;
 import com.ak.kafka.OrderProducer;
 import com.ak.repository.OrderRepository;
@@ -55,20 +57,26 @@ public class OrderServiceimpl implements IOrderService {
 		order.setProductId(dto.getProductId());
 		order.setQuantity(dto.getQuantity());
 		order.setTotalPrice(totalPrice);
-		order.setStatus("CREATED");
-		
-		Order savedOrder = orderRepository.save(order);
-		
-		//4. publish kafka event
-				orderProducer.sendOrderEvent(savedOrder);
 		
 		
-		sendNotificatioToUser(dto.getUserId(),
+		 //  Set initial status and timestamp
+        order.setDeliveryStatus(OrderStatus.PLACED);
+        order.setPlacedAt(LocalDateTime.now());
+        
+        Order savedOrder = orderRepository.save(order);
+        
+      //4. publish kafka event
+		orderProducer.sendOrderEvent(savedOrder);
+        
+        System.out.println("✅ Order created with ID: " + savedOrder.getId() + 
+                         " | Status: " + savedOrder.getDeliveryStatus());
+        
+        sendNotificatioToUser(dto.getUserId(),
 				"order #" +savedOrder.getId() + "placed sucessfully Total " + totalPrice);
+        
+        return savedOrder;
 		
 		
-		
-		return savedOrder;
 	}
 
 
@@ -77,6 +85,8 @@ public class OrderServiceimpl implements IOrderService {
 		
 		return orderRepository.findAll();
 	}
+	
+	
 	
 	
 	

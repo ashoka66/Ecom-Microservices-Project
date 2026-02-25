@@ -22,7 +22,7 @@ import com.ak.service.ICartService;
 import com.ak.service.INotificationService;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 
 @Controller
 public class UiController {
@@ -161,12 +161,26 @@ public class UiController {
 
     @GetMapping("/orders")
     public String ordersPage(Model model, Principal principal) {
+    	
+    	if (principal == null) {
+            return "redirect:/login";
+        }
+    	
+    	String username = principal.getName();
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.set("X-Internal-Calls", "AUTH_SERVICE");
-        HttpEntity<String> entity = new HttpEntity<>(headers);
+      
 
         try {
+        	
+        	// Get user
+            User user = userRepository.findByEmail(username)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+            
+            // Fetch orders from Order Service
+            HttpHeaders headers = new HttpHeaders();
+            headers.set("X-Internal-Call", "AUTH_SERVICE");
+            HttpEntity<String> entity = new HttpEntity<>(headers);
+            
             ResponseEntity<String> response = restTemplate.exchange(
                 "http://localhost:8086/orders",
                 HttpMethod.GET,
@@ -175,14 +189,13 @@ public class UiController {
             );
             
             ObjectMapper mapper=new ObjectMapper();
+            mapper.registerModule(new JavaTimeModule());
             List<Map<String,Object>> orders=mapper.readValue(response.getBody(),new TypeReference<List<Map<String,Object>>> () {});
             
             
             
             
-            //Get user details
-            User user=userRepository.findByEmail(principal.getName())
-            		.orElseThrow(()->new RuntimeException("user not found"));
+         
             
             //Filters order by current user
             List<Map<String,Object>> userOrders=orders.stream()
@@ -209,4 +222,10 @@ public class UiController {
         model.addAttribute("username", principal.getName());
         return "orders";
     }
+    
+    
+    
+    
+    
+    
 }

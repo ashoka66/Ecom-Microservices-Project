@@ -10,7 +10,7 @@
 
   <!--ORDER SUCCESS MODEL -->
   
-  <div class="successModal" class="model-overlay" style="display:none;">
+  <div id="successModal" class="successModal model-overlay show" style="display:none;">
        <div class="modal-content">
             <!--Animated Check -->
             <div class="success-checkmark">
@@ -131,7 +131,7 @@
     	},10);
     	
     	//Redirect to order page  after 3 seconds
-    	setTimout(()=>{
+    	setTimeout(()=>{
     		window.location.href='/orders';
     	},3000);
     }
