@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.client.RestTemplate;
 
 import com.ak.entity.Cart;
@@ -225,6 +227,16 @@ public class UiController {
     
     
     
+    @PostMapping("/profile/notifications/{id}/read")
+    public String markNotificationAsRead(@PathVariable Long id, Principal principal) {
+        
+        User user = userRepository.findByEmail(principal.getName())
+            .orElseThrow(() -> new RuntimeException("User not found"));
+        
+        notificationService.marksAsRead(id);
+        
+        return "redirect:/profile";
+    }
     
     
     
