@@ -58,7 +58,7 @@ public class UiController {
     	User user =userRepository.findByEmail(principal.getName())
     			.orElse(null);
     	
-    	if(user!=null && "Admin".equals(user.getRole())) {
+    	if(user!=null && "ADMIN".equals(user.getRole())) {
     		return "redirect:/admin";
     	}
     	
