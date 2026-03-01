@@ -10,7 +10,7 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="/admin" class="navbar-brand">🛒 ShopMart Admin</a>
+            <a href="/admin" class="navbar-brand">🛒Shopmart ADMIN</a>
             
             <ul class="navbar-menu">
                 <li><a href="/admin">Dashboard</a></li>
@@ -40,7 +40,7 @@
 
         <!-- Error Message -->
         <div th:if="${param.error == 'failed'}" class="alert alert-error">
-            ❌ Failed to add product. Please try again.
+              Failed to add product. Please try again.
         </div>
 
         <!-- Add Product Form -->
@@ -58,7 +58,7 @@
                         placeholder="Enter product name"
                         required 
                     />
-                </div>
+                </div>	
 
                 <!-- Description -->
                 <div class="form-group">
@@ -115,6 +115,7 @@
                         <option value="Sports">Sports</option>
                         <option value="Toys">Toys</option>
                         <option value="Beauty">Beauty</option>
+                        <option value="footear">Other</option>
                         <option value="Other">Other</option>
                     </select>
                 </div>
@@ -131,7 +132,7 @@
                         required 
                     />
                     <small style="color: var(--gray); font-size: 0.875rem;">
-                        💡 Tip: Use image hosting services like Imgur, Cloudinary, or direct product image URLs
+                         Use image hosting services like Imgur, Cloudinary, or direct product image URLs
                     </small>
                 </div>
 
@@ -159,7 +160,7 @@
                 <!-- Submit Buttons -->
                 <div style="display: flex; gap: var(--spacing-sm);">
                     <button type="submit" class="btn btn-primary btn-lg" style="flex: 1;">
-                        ✅ Add Product
+                          Add Product
                     </button>
                     <a href="/admin" class="btn btn-outline btn-lg" style="flex: 1;">
                         Cancel

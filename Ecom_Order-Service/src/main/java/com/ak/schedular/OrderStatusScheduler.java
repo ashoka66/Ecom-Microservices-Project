@@ -11,7 +11,7 @@ import com.ak.entity.Order;
 import com.ak.enums.OrderStatus;
 import com.ak.repository.OrderRepository;
 
-@Component
+//@Component
 public class OrderStatusScheduler {
 	
 	@Autowired
