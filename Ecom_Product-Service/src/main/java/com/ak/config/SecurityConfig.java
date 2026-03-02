@@ -24,7 +24,7 @@ public class SecurityConfig {
 		
 		http.csrf(csrf -> csrf.disable())
 		     .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
-		     .authorizeHttpRequests(auth -> auth.requestMatchers(HttpMethod.GET,"/products/**")
+		     .authorizeHttpRequests(auth -> auth./*requestMatchers(HttpMethod.GET,"/products/**")
 		    		                           .permitAll()
 		     	                           
 		    		                           
@@ -34,8 +34,8 @@ public class SecurityConfig {
 		    		                           .requestMatchers(HttpMethod.PUT,"/products/**")
 		    		                           .hasRole("ADMIN")
 		    		                           .requestMatchers(HttpMethod.DELETE,"/products/**")
-		    		                           .hasRole("ADMIN")
-		    		                           .anyRequest().authenticated()
+		    		                           .hasRole("ADMIN")*/
+		    		                           anyRequest().permitAll()
 		    	
 		    		    );
 		

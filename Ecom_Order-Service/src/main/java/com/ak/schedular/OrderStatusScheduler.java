@@ -57,7 +57,7 @@ public class OrderStatusScheduler {
     }
     
     /**
-     * Update orders to DELIVERED and set delivery timestamp
+     * Update orders to DELIVERED and set delivery time stamp
      */
     private void updateToDelivered(LocalDateTime before) {
         List<Order> orders = orderRepository.findByDeliveryStatusAndPlacedAtBefore(
@@ -67,7 +67,7 @@ public class OrderStatusScheduler {
             order.setDeliveryStatus(OrderStatus.DELIVERED);
             order.setDeliveredAt(LocalDateTime.now());
             orderRepository.save(order);
-            System.out.println("✅ Order #" + order.getId() + " DELIVERED at " + order.getDeliveredAt());
+            System.out.println(" Order #" + order.getId() + " DELIVERED at " + order.getDeliveredAt());
         }
     }
 
