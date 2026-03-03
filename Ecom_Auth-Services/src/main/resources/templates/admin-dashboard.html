@@ -10,12 +10,12 @@
     <!-- Navigation Bar -->
     <nav class="navbar">
         <div class="navbar-container">
-            <a href="/admin" class="navbar-brand">🛒 ShopMart Admin</a>
+            <a href="/admin" class="navbar-brand">🛒ShopMart Admin</a>
             
             <ul class="navbar-menu">
                 <li><a href="/admin" style="color: var(--primary-color);">Dashboard</a></li>
                 <li><a href="/admin/products/add">Add Product</a></li>
-                <li><a href="/products">View Store</a></li>
+                <li><a href="/admin/products">View Store</a></li>
                 <li>
                     <div class="navbar-user">
                         <div class="user-avatar" th:text="${#strings.substring(username, 0, 1).toUpperCase()}">A</div>
@@ -43,13 +43,13 @@
 
         <!-- Success/Error Messages -->
         <div th:if="${param.success == 'product_added'}" class="alert alert-success">
-            ✅ Product added successfully!
+             Product added successfully!
         </div>
         <div th:if="${param.success == 'product_deleted'}" class="alert alert-success">
-            ✅ Product deleted successfully!
+             Product deleted successfully!
         </div>
         <div th:if="${param.error}" class="alert alert-error">
-            ❌ Operation failed. Please try again.
+             Operation failed. Please try again.
         </div>
 
         <!-- Statistics Cards -->
@@ -177,9 +177,8 @@
                 <div class="footer-section">
                     <h4 class="footer-heading">Quick Links</h4>
                     <ul class="footer-links">
-                        <li><a href="/products">Products</a></li>
-                        <li><a href="/cart">Cart</a></li>
-                        <li><a href="/orders">My Orders</a></li>
+                        <li><a href="/admin/products">Products</a></li>
+                        
                         <li><a href="/profile">Profile</a></li>
                     </ul>
                 </div>
@@ -187,7 +186,6 @@
                 <div class="footer-section">
                     <h4 class="footer-heading">Customer Service</h4>
                     <ul class="footer-links">
-                        <li><a href="#">Contact Us</a></li>
                         <li><a href="#">Shipping Info</a></li>
                         <li><a href="#">Returns</a></li>
                         <li><a href="#">FAQ</a></li>

@@ -135,5 +135,40 @@ public class AdminController {
 		}
 	}
 	
+	//for view products 
+	@GetMapping("/products")
+	public String adminProductsPage(Model model, Principal principal) {
+	    
+	    try {
+	        HttpHeaders headers = new HttpHeaders();
+	        headers.set("X-Internal-Call", "AUTH_SERVICE");
+	        HttpEntity<String> entity = new HttpEntity<>(headers);
+	        
+	        ResponseEntity<String> response = restTemplate.exchange(
+	            "http://localhost:8086/products",
+	            HttpMethod.GET,
+	            entity,
+	            String.class
+	        );
+	        
+	        ObjectMapper mapper = new ObjectMapper();
+	        List<Map<String,Object>> products = mapper.readValue(
+	            response.getBody(), 
+	            new TypeReference<List<Map<String,Object>>>(){}
+	        );
+	        
+	        model.addAttribute("products", products);
+	        model.addAttribute("username", principal.getName());
+	        
+	        return "admin-products";
+	        
+	    } catch(Exception e) {
+	        System.out.println(" Error: " + e.getMessage());
+	        model.addAttribute("products", List.of());
+	        model.addAttribute("username", principal.getName());
+	        return "admin-products";
+	    }
+	}
+	
 
 }
