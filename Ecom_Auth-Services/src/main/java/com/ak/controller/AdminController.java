@@ -81,7 +81,7 @@ public class AdminController {
 	//handle add product submission
 	@PostMapping("/products/add")
 	public String addProduct(@RequestParam String name, 
-			                 @RequestParam String description,
+			                 @RequestParam String unlimitedText,
 			                 @RequestParam Double price,
 			                 @RequestParam Integer stock,
 			                 @RequestParam String category,
@@ -94,7 +94,7 @@ public class AdminController {
 			
 			//create product json
 			String productJson=String.format("{\"name\":\"%s\",\"description\":\"%s\",\"price\":%s,\"stock\":%s,\"category\":\"%s\",\"imageUrl\":\"%s\"}",
-					 name, description, price, stock, category, imageUrl);
+					 name, unlimitedText, price, stock, category, imageUrl);
 			
 			
 			HttpEntity<String> entity = new HttpEntity<>(productJson,headers);
@@ -125,7 +125,7 @@ public class AdminController {
 			
 			restTemplate.exchange("http://localhost:8086/products/" + id, HttpMethod.DELETE,entity,String.class);
 			
-			return "redirect:/admin?success=proudct_deleted";
+			return "redirect:/admin/products?success=proudct_deleted";
 			
 		}
 		catch(Exception e) {

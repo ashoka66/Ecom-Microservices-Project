@@ -62,11 +62,11 @@
 
                 <!-- Description -->
                 <div class="form-group">
-                    <label class="form-label" for="description">Description *</label>
+                    <label class="form-label" for="unlimitedText">Description *</label>
                     <textarea 
                         class="form-control" 
-                        id="description" 
-                        name="description" 
+                        id="unlimitedText" 
+                        name="unlimitedText" 
                         rows="4"
                         placeholder="Enter product description"
                         required
@@ -123,14 +123,15 @@
                 <!-- Image URL -->
                 <div class="form-group">
                     <label class="form-label" for="imageUrl">Image URL *</label>
+                    
                     <input 
-                        type="url" 
+                        type="text" 
                         class="form-control" 
                         id="imageUrl" 
                         name="imageUrl" 
-                        placeholder="https://example.com/image.jpg"
+                        placeholder="/images/products/yourexample.jpg"
                         required 
-                    />
+                     />
                     <small style="color: var(--gray); font-size: 0.875rem;">
                          <!-- Use image hosting services like Imgur, Cloudinary, or direct product image URLs -->
                     </small>
@@ -225,7 +226,7 @@
             document.getElementById('preview-name').textContent = e.target.value || 'Product Name';
         });
 
-        document.getElementById('description').addEventListener('input', function(e) {
+        document.getElementById('unlimitedText').addEventListener('input', function(e) {
             document.getElementById('preview-description').textContent = e.target.value || 'Product description will appear here';
         });
 
